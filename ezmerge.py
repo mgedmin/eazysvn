@@ -3,13 +3,17 @@
 # Make simple revision merges much easier
 #
 # Copyright (c) 2006 Philipp von Weitershausen
+# Copyright (c) 2006 Marius Gedminas
 #
 # Usage: ezmerge rev branch [path]
 #    or: ezmerge beginrev:endrev branch [path]
 #
 
 import os
+import sys
+import optparse
 import popen2
+
 
 def revs(rev):
     """
@@ -22,9 +26,16 @@ def revs(rev):
 
     Revision ranges are also supported:
 
-      >>> revs('42:21252')
+      >>> revs('42-21252')
       (41, 21252)
-      >>> revs('42:HEAD')
+      >>> revs('42-HEAD')
+      (41, 'HEAD')
+
+    SVN-compatible revision ranges also work
+
+      >>> revs('41:21252')
+      (41, 21252)
+      >>> revs('41:HEAD')
       (41, 'HEAD')
 
     Even reverse diffs that undo certain revisions are supported
@@ -32,18 +43,32 @@ def revs(rev):
 
       >>> revs('42:41') # undo r42
       (42, 41)
+
+    But not with the "simple rev" syntax
+
+      >>> revs('42-41')
+      Traceback (most recent call last):
+        ...
+      ValueError: empty range (42-41)
+
     """
-    if ':' in rev:
+    if '-' in rev:
+        rev, endrev = rev.split('-')
+        rev = int(rev) - 1
+        if not endrev == 'HEAD':
+            endrev = int(endrev)
+        if rev >= endrev:
+            raise ValueError('empty range (%s-%s)' % (rev + 1, endrev))
+    elif ':' in rev:
         rev, endrev = rev.split(':')
         rev = int(rev)
         if not endrev == 'HEAD':
             endrev = int(endrev)
-        if rev < endrev:
-            rev -= 1
     else:
         endrev = rev
         rev = int(rev) - 1
     return rev, endrev
+
 
 def svninfo(path):
     """
@@ -51,6 +76,7 @@ def svninfo(path):
     """
     stdout, stdin = popen2.popen2('svn info %s' % path)
     return stdout.read()
+
 
 def determinebranch(branch, path, svninfo=svninfo):
     """
@@ -120,23 +146,50 @@ def determinebranch(branch, path, svninfo=svninfo):
 
     return '/'.join(new_chunks)
 
+
 def main(argv):
-    assert len(argv) in (3, 4)
-    rev = argv[1]
-    branch = argv[2]
+    progname = os.path.basename(argv[0])
+    parser = optparse.OptionParser(
+                "usage: %prog [options] rev source-branch [wc-path]",
+                prog=progname,
+                description="merge changes from Subversion branches")
+    parser.add_option('-n', '--dry-run',
+                      help='do not touch any files on disk or in subversion',
+                      action='store_true', dest='dry_run', default=False)
+    try:
+        opts, args = parser.parse_args(argv[1:])
+        if len(args) < 2:
+            parser.error("too few arguments, try %s --help" % progname)
+        elif len(args) > 3:
+            parser.error("too many arguments, try %s --help" % progname)
+    except optparse.OptParseError, e:
+        sys.exit(e)
+
+    rev = args[0]
+    branch = args[1]
     path = '.'
-    if len(argv) == 4:
-        path = sys.argv[3]
+    if len(argv) == 2:
+        path = argv[2]
 
     beginrev, endrev = revs(rev)
     branch = determinebranch(branch, path)
-    cmd = "svn merge -r %s:%s %s %s" % (beginrev, endrev, branch, path)
-    print cmd
-    os.system(cmd)
+    merge_cmd = "svn merge -r %s:%s %s %s" % (beginrev, endrev, branch, path)
+    if '-' in rev or ':' in rev:
+        what = "revisions %s" % rev
+    else:
+        what = "revision %s" % rev
+    print "Merge %s from %s with" % (what, branch)
+    print
+    print " ", merge_cmd
+    print
+    log_cmd = "svn log -r %s:%s %s" % (beginrev + 1, endrev, branch)
+    os.system(log_cmd)
+    if not opts.dry_run:
+        os.system(merge_cmd)
+
 
 if __name__ == '__main__':
-    import sys
-    if sys.argv[1] == 'test':
+    if len(sys.argv) > 1 and sys.argv[1] == 'test':
         import doctest
         doctest.testmod()
     else:
