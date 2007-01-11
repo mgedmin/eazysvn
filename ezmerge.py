@@ -158,7 +158,7 @@ def determinebranch(branch, path, svninfo=svninfo):
     return '/'.join(new_chunks)
 
 
-def branchpoint(branch, svnlog=svnlog):
+def branchpoints(branch, svnlog=svnlog):
     r"""
     Let's set up a dummy 'svn log' command handler:
 
@@ -167,7 +167,7 @@ def branchpoint(branch, svnlog=svnlog):
       ... <?xml version="1.0" encoding="utf-8"?>
       ... <log>
       ... <logentry
-      ...    revision="4505">
+      ...    revision="4515">
       ... <author>mg</author>
       ... <date>2007-01-11T16:30:07.775378Z</date>
       ... <msg>Blah blah.
@@ -185,12 +185,12 @@ def branchpoint(branch, svnlog=svnlog):
       ... </log>
       ... '''
 
-    ``branchpoint()`` takes the svn URL and finds the revision number of the
+    ``branchpoints()`` takes the svn URL and finds the revision number of the
     branch point.
 
-      >>> branchpoint('http://dev.worldcookery.com/svn/bla/branches/foobar',
+      >>> branchpoints('http://dev.worldcookery.com/svn/bla/branches/foobar',
       ...             svnlog=dummylog)
-      4504
+      (4504, 4515)
 
     """
     xml = svnlog(branch)
@@ -198,8 +198,10 @@ def branchpoint(branch, svnlog=svnlog):
         dom = minidom.parseString(xml)
     except:
         sys.exit("Could not parse svn log output:\n\n" + xml)
-    last_entry = dom.getElementsByTagName('logentry')[-1]
-    return int(last_entry.getAttribute('revision'))
+    newest_entry = dom.getElementsByTagName('logentry')[0]
+    oldest_entry = dom.getElementsByTagName('logentry')[-1]
+    return (int(oldest_entry.getAttribute('revision')),
+            int(newest_entry.getAttribute('revision')))
 
 
 def main(argv):
@@ -221,24 +223,26 @@ def main(argv):
         sys.exit(e)
 
     rev = args[0]
-    branch = args[1]
+    branchname = args[1]
     path = '.'
     if len(args) > 2:
         path = args[2]
 
-    branch = determinebranch(branch, path)
+    branch = determinebranch(branchname, path)
+    if branchname != 'trunk' and not branchname.endswith('branch'):
+        branchname += ' branch'
     if rev == 'ALL':
-        beginrev = branchpoint(branch)
-        endrev = 'HEAD'
+        beginrev, endrev = branchpoints(branch)
+        print "Merge %s with" % (branchname)
     else:
         beginrev, endrev = revs(rev)
-    merge_cmd = "svn merge -r %s:%s %s %s" % (beginrev, endrev, branch, path)
-    if '-' in rev or ':' in rev:
-        what = "revisions %s" % rev
-    else:
-        what = "revision %s" % rev
-    print "Merge %s from %s with" % (what, branch)
+        if '-' in rev or ':' in rev:
+            what = "revisions %s" % rev
+        else:
+            what = "revision %s" % rev
+        print "Merge %s from %s with" % (what, branchname)
     print
+    merge_cmd = "svn merge -r %s:%s %s %s" % (beginrev, endrev, branch, path)
     print " ", merge_cmd
     print
     log_cmd = "svn log -r %s:%s %s" % (beginrev + 1, endrev, branch)
