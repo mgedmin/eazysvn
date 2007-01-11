@@ -168,8 +168,8 @@ def main(argv):
     rev = args[0]
     branch = args[1]
     path = '.'
-    if len(argv) == 2:
-        path = argv[2]
+    if len(args) > 2:
+        path = args[2]
 
     beginrev, endrev = revs(rev)
     branch = determinebranch(branch, path)
