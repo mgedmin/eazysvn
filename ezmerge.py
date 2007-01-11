@@ -3,16 +3,18 @@
 # Make simple revision merges much easier
 #
 # Copyright (c) 2006 Philipp von Weitershausen
-# Copyright (c) 2006 Marius Gedminas
+# Copyright (c) 2007 Marius Gedminas
 #
 # Usage: ezmerge rev branch [path]
 #    or: ezmerge beginrev:endrev branch [path]
+#    or: ezmerge ALL branch [path]
 #
 
 import os
 import sys
 import optparse
 import popen2
+from xml.dom import minidom
 
 
 def revs(rev):
@@ -75,6 +77,15 @@ def svninfo(path):
     Return svn information about ``path``.
     """
     stdout, stdin = popen2.popen2('svn info %s' % path)
+    return stdout.read()
+
+
+def svnlog(url):
+    """
+    Return svn log of ``url``, stopping on branchpoints, in XML.
+    """
+    stdout, stdin = popen2.popen2('svn log --non-interactive --stop-on-copy'
+                                  ' --xml %s' % url)
     return stdout.read()
 
 
@@ -147,6 +158,50 @@ def determinebranch(branch, path, svninfo=svninfo):
     return '/'.join(new_chunks)
 
 
+def branchpoint(branch, svnlog=svnlog):
+    r"""
+    Let's set up a dummy 'svn log' command handler:
+
+      >>> def dummylog(url):
+      ...     return '''\
+      ... <?xml version="1.0" encoding="utf-8"?>
+      ... <log>
+      ... <logentry
+      ...    revision="4505">
+      ... <author>mg</author>
+      ... <date>2007-01-11T16:30:07.775378Z</date>
+      ... <msg>Blah blah.
+      ... 
+      ... Blah blah.
+      ... 
+      ... </msg>
+      ... </logentry>
+      ... <logentry
+      ...    revision="4504">
+      ... <author>mg</author>
+      ... <date>2007-01-11T16:29:32.166370Z</date>
+      ... <msg>create branch</msg>
+      ... </logentry>
+      ... </log>
+      ... '''
+
+    ``branchpoint()`` takes the svn URL and finds the revision number of the
+    branch point.
+
+      >>> branchpoint('http://dev.worldcookery.com/svn/bla/branches/foobar',
+      ...             svnlog=dummylog)
+      4504
+
+    """
+    xml = svnlog(branch)
+    try:
+        dom = minidom.parseString(xml)
+    except:
+        sys.exit("Could not parse svn log output:\n\n" + xml)
+    last_entry = dom.getElementsByTagName('logentry')[-1]
+    return int(last_entry.getAttribute('revision'))
+
+
 def main(argv):
     progname = os.path.basename(argv[0])
     parser = optparse.OptionParser(
@@ -171,8 +226,12 @@ def main(argv):
     if len(args) > 2:
         path = args[2]
 
-    beginrev, endrev = revs(rev)
     branch = determinebranch(branch, path)
+    if rev == 'ALL':
+        beginrev = branchpoint(branch)
+        endrev = 'HEAD'
+    else:
+        beginrev, endrev = revs(rev)
     merge_cmd = "svn merge -r %s:%s %s %s" % (beginrev, endrev, branch, path)
     if '-' in rev or ':' in rev:
         what = "revisions %s" % rev
