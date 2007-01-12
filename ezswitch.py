@@ -2,10 +2,13 @@
 #
 # Make switching between SVN branches easier
 #
-# Copyright (c) 2006 Marius Gedminas
+# Copyright (c) 2007 Marius Gedminas
 # Portions Copyright (c) 2006 Philipp von Weitershausen
 #
-# Usage: ezswitch branch [path]
+# Usage: ezswitch.py --help
+#
+# Bugs: lack of serious command-line argument quoting.
+#       e.g. `ezswitch.py -c -m "it's a good branch" mybranch` will fail
 #
 
 import os
@@ -189,7 +192,7 @@ def listbranches(path, svninfo=svninfo, svnls=svnls):
 def main(argv):
     progname = os.path.basename(argv[0])
     parser = optparse.OptionParser(
-                "usage: %prog [-n] [-c] branch [wc-path]\n"
+                "usage: %prog [-n] [-c] [-m MSG] branch [wc-path]\n"
                 "       %prog -l\n"
                 "       %prog",
                 prog=progname,
@@ -203,6 +206,9 @@ def main(argv):
     parser.add_option('-c', '--create-branch',
                       help='create the new branch before switching to it',
                       action='store_true', dest='create_branch', default=False)
+    parser.add_option('-m',
+                      help='commit message for --create-branch',
+                      action='store', dest='message', default=None)
     parser.add_option('-n', '--dry-run',
                       help='do not touch any files on disk or in subversion',
                       action='store_true', dest='dry_run', default=False)
@@ -230,7 +236,9 @@ def main(argv):
     branch = determinebranch(branch, path)
     if opts.create_branch:
         cur_branch = currentbranch(path)
-        cmd = "svn cp %s %s -m 'create branch'" % (cur_branch, branch)
+        cmd = "svn cp %s %s" % (cur_branch, branch)
+        if opts.message:
+            cmd += " -m '%s'" % opts.message
         print cmd
         if not opts.dry_run:
             os.system(cmd)
