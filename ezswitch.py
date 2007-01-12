@@ -129,9 +129,13 @@ def determinebranch(branch, path, svninfo=svninfo):
 def main(argv):
     progname = os.path.basename(argv[0])
     parser = optparse.OptionParser(
-                "usage: %prog [options] branch [wc-path]",
+                "usage: %prog [options] branch [wc-path]\n"
+                "       %prog",
                 prog=progname,
-                description="switch the working directory to a different Subversion branch")
+                description="Switch the working directory to a different"
+                            " Subversion branch.  When run without"
+                            " arguments, %prog will print the"
+                            " URL of the current branch.")
     parser.add_option('-c', '--create-branch',
                       help='create the new branch before switching to it',
                       action='store_true', dest='create_branch', default=False)
@@ -140,12 +144,15 @@ def main(argv):
                       action='store_true', dest='dry_run', default=False)
     try:
         opts, args = parser.parse_args(argv[1:])
-        if len(args) < 1:
-            parser.error("too few arguments, try %s --help" % progname)
-        elif len(args) > 2:
+        if len(args) > 2:
             parser.error("too many arguments, try %s --help" % progname)
     except optparse.OptParseError, e:
         sys.exit(e)
+
+    if not args:
+        path = '.'
+        print currentbranch(path)
+        return
 
     branch = args[0]
     path = '.'
