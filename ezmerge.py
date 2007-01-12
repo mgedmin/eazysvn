@@ -26,6 +26,12 @@ def revs(rev):
       >>> revs('43')
       (42, '43')
 
+    Sometimes it is convenient to copy and paste revision numbers
+    from svn log output
+
+      >>> revs('r43')
+      (42, '43')
+
     Revision ranges are also supported:
 
       >>> revs('42-21252')
@@ -54,6 +60,8 @@ def revs(rev):
       ValueError: empty range (42-41)
 
     """
+    if rev.startswith('r'):
+        rev = rev[1:]
     if '-' in rev:
         rev, endrev = rev.split('-')
         rev = int(rev) - 1
