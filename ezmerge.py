@@ -5,6 +5,9 @@
 # Copyright (c) 2006 Philipp von Weitershausen
 # Copyright (c) 2007 Marius Gedminas
 #
+# This program is distributed under the terms of the GNU General Public Licence
+# See the file COPYING for details.
+#
 # Usage: ezmerge rev branch [path]
 #    or: ezmerge beginrev:endrev branch [path]
 #    or: ezmerge ALL branch [path]

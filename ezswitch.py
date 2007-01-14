@@ -5,6 +5,9 @@
 # Copyright (c) 2007 Marius Gedminas
 # Portions Copyright (c) 2006 Philipp von Weitershausen
 #
+# This program is distributed under the terms of the GNU General Public Licence
+# See the file COPYING for details.
+#
 # Usage: ezswitch.py --help
 #
 # Bugs: lack of serious command-line argument quoting.
