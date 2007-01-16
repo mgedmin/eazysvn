@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # 
-# Make simple revision merges and branch switching much easier
+# Make simple Subversion revision merges and branch switching much easier.
 #
 # Copyright (c) 2006-2007 Philipp von Weitershausen, Marius Gedminas
 #
 # This program is distributed under the terms of the GNU General Public Licence
 # See the file COPYING for details.
 #
-# Usage: easysvn COMMAND ARGUMENTS
-#  e.g.: easysvn help
+# Usage: eazysvn COMMAND ARGUMENTS
+#  e.g.: eazysvn help
 #
-# For backwards compatibility you can rename (or symlink) easysvn to ezswitch
-# or ezmerge as a shortcut for easysvn switch/merge.
+# For backwards compatibility you can rename (or symlink) eazysvn to ezswitch
+# or ezmerge as a shortcut for eazysvn switch/merge.
 #
 
 import os
@@ -440,7 +440,7 @@ def help(argv, progname=None):
     print "Use %s command --help for more information about commands" % progname
 
 
-def easysvn(argv):
+def eazysvn(argv):
     progname = os.path.basename(argv[0])
     commands = {
         'merge': ezmerge,
@@ -468,7 +468,7 @@ def main():
         'ezswitch': ezswitch,
         'ezswitch.py': ezswitch,
         }
-    func = commands.get(cmd, easysvn)
+    func = commands.get(cmd, eazysvn)
     sys.exit(func(sys.argv))
 
 if __name__ == '__main__':
