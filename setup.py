@@ -16,7 +16,8 @@ setup(
     zip_safe=False,
     entry_points="""
     [console_scripts]
-    ezmerge = ezmerge:main
-    ezswitch = ezmerge:main
+    easysvn = easysvn:main
+    ezmerge = easysvn:main
+    ezswitch = easysvn:main
     """,
 )

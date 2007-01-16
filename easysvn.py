@@ -7,12 +7,12 @@
 # This program is distributed under the terms of the GNU General Public Licence
 # See the file COPYING for details.
 #
-# Usage: ezmerge rev branch [path]
-#    or: ezmerge beginrev:endrev branch [path]
-#    or: ezmerge ALL branch [path]
+# Usage: easysvn COMMAND ARGUMENTS
+#  e.g.: easysvn help
 #
-# Usage: ezswitch branch [path]
-#    or: ezswitch -l
+# For backwards compatibility you can rename (or symlink) easysvn to ezswitch
+# or ezmerge as a shortcut for easysvn switch/merge.
+#
 
 import os
 import sys
@@ -315,8 +315,8 @@ def branchpoints(branch, svnlog=svnlog):
             int(newest_entry.getAttribute('revision')))
 
 
-def ezmerge(argv):
-    progname = os.path.basename(argv[0])
+def ezmerge(argv, progname=None):
+    progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
                 "usage: %prog [options] rev source-branch [wc-path]",
                 prog=progname,
@@ -362,8 +362,8 @@ def ezmerge(argv):
         os.system(merge_cmd)
 
 
-def ezswitch(argv):
-    progname = os.path.basename(argv[0])
+def ezswitch(argv, progname=None):
+    progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
                 "usage: %prog [-n] [-c] [-m MSG] branch [wc-path]\n"
                 "       %prog -l\n"
@@ -421,9 +421,44 @@ def ezswitch(argv):
     if not opts.dry_run:
         os.system(cmd)
 
-def test(argv):
+
+def selftest(argv, progname=None):
     import doctest
-    doctest.testmod()
+    failures, tests = doctest.testmod()
+    if not failures:
+        print "All %d tests passed." % tests
+
+
+def help(argv, progname=None):
+    progname = os.path.basename(argv[0])
+    print "usage: %s command arguments" % progname
+    print "where command is one of"
+    print "  switch     -- switch to a different branch"
+    print "  merge      -- merge branches"
+    print "  selftest   -- run self-tests"
+    print "  help       -- this help message"
+    print "Use %s command --help for more information about commands" % progname
+
+
+def easysvn(argv):
+    progname = os.path.basename(argv[0])
+    commands = {
+        'merge': ezmerge,
+        'switch': ezswitch,
+        'selftest': selftest,
+        'help': help,
+        '-h': help,
+        '--help': help,
+        }
+    if len(argv) < 2:
+        return help(argv)
+    cmd = argv.pop(1)
+    func = commands.get(cmd)
+    if func is None:
+        sys.exit("Unknown command: %s." % cmd)
+    progname = progname + ' ' + cmd
+    return func(argv, progname=progname)
+
 
 def main():
     cmd = os.path.basename(sys.argv[0])
@@ -432,13 +467,8 @@ def main():
         'ezmerge.py': ezmerge,
         'ezswitch': ezswitch,
         'ezswitch.py': ezswitch,
-        'eztest': test,
-        'eztest.py': test
         }
-    func = commands.get(cmd)
-    if func is None:
-        sys.stderr.write("Unknown command: %s.\n" % cmd)
-        sys.exit(1)
+    func = commands.get(cmd, easysvn)
     sys.exit(func(sys.argv))
 
 if __name__ == '__main__':
