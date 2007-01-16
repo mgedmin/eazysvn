@@ -12,7 +12,7 @@ setup(
     description='Make simple revision merges and branch switching much easier',
     license='GPL',
 
-    packages=find_packages('.'),
+    py_modules=['eazysvn'],
     zip_safe=False,
     entry_points="""
     [console_scripts]
