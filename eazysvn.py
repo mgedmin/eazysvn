@@ -362,6 +362,48 @@ def ezmerge(argv, progname=None):
         os.system(merge_cmd)
 
 
+def ezrevert(argv, progname=None):
+    progname = progname or os.path.basename(argv[0])
+    parser = optparse.OptionParser(
+                "usage: %prog [options] rev [wc-path]",
+                prog=progname,
+                description="revert changes")
+    parser.add_option('-n', '--dry-run',
+                      help='do not touch any files on disk or in subversion',
+                      action='store_true', dest='dry_run', default=False)
+    try:
+        opts, args = parser.parse_args(argv[1:])
+        if len(args) < 1:
+            parser.error("too few arguments, try %s --help" % progname)
+        elif len(args) > 2:
+            parser.error("too many arguments, try %s --help" % progname)
+    except optparse.OptParseError, e:
+        sys.exit(e)
+
+    rev = args[0]
+    path = '.'
+    if len(args) > 1:
+        path = args[1]
+
+    if rev == 'ALL':
+        sys.exit("I refuse to revert all checkins in a branch")
+    else:
+        beginrev, endrev = revs(rev)
+        if '-' in rev or ':' in rev:
+            what = "revisions %s" % rev
+        else:
+            what = "revision %s" % rev
+        print "Revert %s with" % what
+    print
+    merge_cmd = "svn merge -r %s:%s %s" % (endrev, beginrev, path)
+    print " ", merge_cmd
+    print
+    log_cmd = "svn log -r %s:%s %s" % (beginrev + 1, endrev, path)
+    os.system(log_cmd)
+    if not opts.dry_run:
+        os.system(merge_cmd)
+
+
 def ezswitch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
@@ -435,6 +477,7 @@ def help(argv, progname=None):
     print "where command is one of"
     print "  switch     -- switch to a different branch"
     print "  merge      -- merge branches"
+    print "  revert     -- revert checkins"
     print "  selftest   -- run self-tests"
     print "  help       -- this help message"
     print "Use %s command --help for more information about commands" % progname
@@ -444,6 +487,7 @@ def eazysvn(argv):
     progname = os.path.basename(argv[0])
     commands = {
         'merge': ezmerge,
+        'revert': ezrevert,
         'switch': ezswitch,
         'selftest': selftest,
         'help': help,

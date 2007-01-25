@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='eazysvn',
-    version='1.2',
+    version='1.3',
     author='Philipp von Weitershausen',
     author_email='philipp@weitershausen.de',
     maintainer='Marius Gedminas',
-    maintainer_email='mgedmin@b4net.lt',
+    maintainer_email='marius@gedmin.as',
     url='http://mg.pov.lt/eazysvn/',
     download_url='http://mg.pov.lt/eazysvn/svn/#egg=eazysvn-dev',
     description='Make simple revision merges and branch switching much easier',
