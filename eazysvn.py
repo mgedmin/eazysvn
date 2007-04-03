@@ -344,6 +344,10 @@ def ezmerge(argv, progname=None):
         branchname += ' branch'
     if rev == 'ALL':
         beginrev, endrev = branchpoints(branch)
+        if branchname == 'trunk':
+            # Special case: when merging from trunk, don't look at the revision
+            # when trunk began, but instead look when the current branch began
+            beginrev, ignore = branchpoints(currentbranch(path))
         print "Merge %s with" % (branchname)
     else:
         beginrev, endrev = revs(rev)
