@@ -441,6 +441,7 @@ def ezswitch(argv, progname=None):
     path = '.'
 
     if opts.list_branches:
+        # TODO: allow a different wc-path
         print '\n'.join(listbranches(path))
         return
 
@@ -468,6 +469,48 @@ def ezswitch(argv, progname=None):
         os.system(cmd)
 
 
+def rmbranch(argv, progname=None):
+    progname = progname or os.path.basename(argv[0])
+    parser = optparse.OptionParser(
+                "usage: %prog [-n] [-m MSG] branch\n"
+                "       %prog -l\n",
+                prog=progname,
+                description="Remove a named Subversion branch.")
+    parser.add_option('-l', '--list',
+                      help='list existing branches',
+                      action='store_true', dest='list_branches', default=False)
+    parser.add_option('-m',
+                      help='commit message for --create-branch',
+                      action='store', dest='message', default=None)
+    parser.add_option('-n', '--dry-run',
+                      help='do not remove the branch, just print the command',
+                      action='store_true', dest='dry_run', default=False)
+    try:
+        opts, args = parser.parse_args(argv[1:])
+        if len(args) < 0:
+            parser.error("too few arguments, try %s --help" % progname)
+        if len(args) > 1:
+            parser.error("too many arguments, try %s --help" % progname)
+    except optparse.OptParseError, e:
+        sys.exit(e)
+
+    path = '.'
+
+    if opts.list_branches:
+        # TODO: allow a different wc-path
+        print '\n'.join(listbranches(path))
+        return
+
+    branch = args[0]
+    branch = determinebranch(branch, path)
+    cmd = "svn rm %s" % branch
+    if opts.message:
+        cmd += " -m '%s'" % opts.message
+    print cmd
+    if not opts.dry_run:
+        os.system(cmd)
+
+
 def selftest(argv, progname=None):
     import doctest
     failures, tests = doctest.testmod()
@@ -482,6 +525,7 @@ def help(argv, progname=None):
     print "  switch     -- switch to a different branch"
     print "  merge      -- merge branches"
     print "  revert     -- revert checkins"
+    print "  rmbranch   -- remove branches"
     print "  selftest   -- run self-tests"
     print "  help       -- this help message"
     print "Use %s command --help for more information about commands" % progname
@@ -493,6 +537,7 @@ def eazysvn(argv):
         'merge': ezmerge,
         'revert': ezrevert,
         'switch': ezswitch,
+        'rmbranch': rmbranch,
         'selftest': selftest,
         'help': help,
         '-h': help,
