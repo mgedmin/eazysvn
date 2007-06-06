@@ -17,7 +17,7 @@
 import os
 import sys
 import optparse
-import popen2
+import popen2 # TODO: use subprocess
 from xml.dom import minidom
 
 
