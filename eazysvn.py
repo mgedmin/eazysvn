@@ -480,15 +480,13 @@ def rmbranch(argv, progname=None):
                       help='list existing branches',
                       action='store_true', dest='list_branches', default=False)
     parser.add_option('-m',
-                      help='commit message for --create-branch',
+                      help='commit message',
                       action='store', dest='message', default=None)
     parser.add_option('-n', '--dry-run',
                       help='do not remove the branch, just print the command',
                       action='store_true', dest='dry_run', default=False)
     try:
         opts, args = parser.parse_args(argv[1:])
-        if len(args) < 0:
-            parser.error("too few arguments, try %s --help" % progname)
         if len(args) > 1:
             parser.error("too many arguments, try %s --help" % progname)
     except optparse.OptParseError, e:
@@ -501,9 +499,54 @@ def rmbranch(argv, progname=None):
         print '\n'.join(listbranches(path))
         return
 
-    branch = args[0]
-    branch = determinebranch(branch, path)
+    if len(args) < 1:
+        parser.error("too few arguments, try %s --help" % progname)
+    branch = determinebranch(branch[0], path)
+
     cmd = "svn rm %s" % branch
+    if opts.message:
+        cmd += " -m '%s'" % opts.message
+    print cmd
+    if not opts.dry_run:
+        os.system(cmd)
+
+
+def mvbranch(argv, progname=None):
+    progname = progname or os.path.basename(argv[0])
+    parser = optparse.OptionParser(
+                "usage: %prog [-n] [-m MSG] oldbranch newbranch\n"
+                "       %prog -l\n",
+                prog=progname,
+                description="Rename a Subversion branch.")
+    parser.add_option('-l', '--list',
+                      help='list existing branches',
+                      action='store_true', dest='list_branches', default=False)
+    parser.add_option('-m',
+                      help='commit message',
+                      action='store', dest='message', default=None)
+    parser.add_option('-n', '--dry-run',
+                      help='do not rename the branch, just print the command',
+                      action='store_true', dest='dry_run', default=False)
+    try:
+        opts, args = parser.parse_args(argv[1:])
+        if len(args) > 2:
+            parser.error("too many arguments, try %s --help" % progname)
+    except optparse.OptParseError, e:
+        sys.exit(e)
+
+    path = '.'
+
+    if opts.list_branches:
+        # TODO: allow a different wc-path
+        print '\n'.join(listbranches(path))
+        return
+
+    if len(args) < 2:
+        parser.error("too few arguments, try %s --help" % progname)
+    oldbranch = determinebranch(args[0], path)
+    newbranch = determinebranch(args[1], path)
+
+    cmd = "svn mv %s %s" % (oldbranch, newbranch)
     if opts.message:
         cmd += " -m '%s'" % opts.message
     print cmd
@@ -538,6 +581,7 @@ def eazysvn(argv):
         'revert': ezrevert,
         'switch': ezswitch,
         'rmbranch': rmbranch,
+        'mvbranch': mvbranch,
         'selftest': selftest,
         'help': help,
         '-h': help,
