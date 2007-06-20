@@ -501,7 +501,7 @@ def rmbranch(argv, progname=None):
 
     if len(args) < 1:
         parser.error("too few arguments, try %s --help" % progname)
-    branch = determinebranch(branch[0], path)
+    branch = determinebranch(args[0], path)
 
     cmd = "svn rm %s" % branch
     if opts.message:
