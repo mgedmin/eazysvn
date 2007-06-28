@@ -599,11 +599,11 @@ def eazysvn(argv):
 
 def main():
     cmd = os.path.basename(sys.argv[0])
+    if cmd.endswith('.py'):
+        cmd = cmd[:-len('.py')]
     commands = {
         'ezmerge': ezmerge,
-        'ezmerge.py': ezmerge,
         'ezswitch': ezswitch,
-        'ezswitch.py': ezswitch,
         }
     func = commands.get(cmd, eazysvn)
     sys.exit(func(sys.argv))
