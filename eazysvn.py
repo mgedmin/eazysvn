@@ -469,6 +469,42 @@ def ezswitch(argv, progname=None):
         os.system(cmd)
 
 
+def ezbranch(argv, progname=None):
+    progname = progname or os.path.basename(argv[0])
+    parser = optparse.OptionParser(
+                "usage: %prog branch [wc-path]\n"
+                "       %prog -l\n"
+                "       %prog",
+                prog=progname,
+                description="Print the URL of a named branch.")
+    parser.add_option('-l', '--list',
+                      help='list existing branches',
+                      action='store_true', dest='list_branches', default=False)
+    try:
+        opts, args = parser.parse_args(argv[1:])
+        if len(args) > 2:
+            parser.error("too many arguments, try %s --help" % progname)
+    except optparse.OptParseError, e:
+        sys.exit(e)
+
+    path = '.'
+
+    if opts.list_branches:
+        # TODO: allow a different wc-path
+        print '\n'.join(listbranches(path))
+        return
+
+    if not args:
+        print currentbranch(path)
+        return
+
+    branch = args[0]
+    if len(args) > 1:
+        path = args[1]
+
+    print determinebranch(branch, path)
+
+
 def rmbranch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
@@ -582,6 +618,7 @@ def eazysvn(argv):
         'switch': ezswitch,
         'rmbranch': rmbranch,
         'mvbranch': mvbranch,
+        'branchurl': ezbranch,
         'selftest': selftest,
         'help': help,
         '-h': help,
@@ -604,6 +641,7 @@ def main():
     commands = {
         'ezmerge': ezmerge,
         'ezswitch': ezswitch,
+        'ezbranch': ezbranch,
         }
     func = commands.get(cmd, eazysvn)
     sys.exit(func(sys.argv))
