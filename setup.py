@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='eazysvn',
-    version='1.5',
+    version='1.5.1',
     author='Philipp von Weitershausen',
     author_email='philipp@weitershausen.de',
     maintainer='Marius Gedminas',
@@ -21,5 +21,6 @@ setup(
     ezmerge = eazysvn:main
     ezswitch = eazysvn:main
     ezbranch = eazysvn:main
+    ezrevert = eazysvn:main
     """,
 )

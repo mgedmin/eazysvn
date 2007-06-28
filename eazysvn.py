@@ -605,6 +605,7 @@ def help(argv, progname=None):
     print "  merge      -- merge branches"
     print "  revert     -- revert checkins"
     print "  rmbranch   -- remove branches"
+    print "  branchurl  -- print full URL of a branch"
     print "  selftest   -- run self-tests"
     print "  help       -- this help message"
     print "Use %s command --help for more information about commands" % progname
@@ -642,6 +643,7 @@ def main():
         'ezmerge': ezmerge,
         'ezswitch': ezswitch,
         'ezbranch': ezbranch,
+        'ezrevert': ezrevert,
         }
     func = commands.get(cmd, eazysvn)
     sys.exit(func(sys.argv))
