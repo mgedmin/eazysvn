@@ -321,6 +321,9 @@ def ezmerge(argv, progname=None):
                 "usage: %prog [options] rev source-branch [wc-path]",
                 prog=progname,
                 description="merge changes from Subversion branches")
+    parser.add_option('-d', '--diff',
+                      help='show a diff of changes on the branch',
+                      action='store_true', dest='diff', default=False)
     parser.add_option('-n', '--dry-run',
                       help='do not touch any files on disk or in subversion',
                       action='store_true', dest='dry_run', default=False)
@@ -348,20 +351,31 @@ def ezmerge(argv, progname=None):
             # Special case: when merging from trunk, don't look at the revision
             # when trunk began, but instead look when the current branch began
             beginrev, ignore = branchpoints(currentbranch(path))
-        print "Merge %s with" % (branchname)
+        msg = "Merge %s" % (branchname)
     else:
         beginrev, endrev = revs(rev)
         if '-' in rev or ':' in rev:
             what = "revisions %s" % rev
         else:
             what = "revision %s" % rev
-        print "Merge %s from %s with" % (what, branchname)
-    print
-    merge_cmd = "svn merge -r %s:%s %s %s" % (beginrev, endrev, branch, path)
-    print " ", merge_cmd
-    print
+        msg = "Merge %s from %s" % (what, branchname)
+    if opts.diff:
+        merge_cmd = "svn diff -r %s:%s %s" % (beginrev, endrev, branch)
+    else:
+        merge_cmd = "svn merge -r %s:%s %s %s" % (beginrev, endrev, branch, path)
+    if not opts.diff:
+        print msg, "with"
+        print
+        print " ", merge_cmd
+        print
+    else:
+        print msg
     log_cmd = "svn log -r %s:%s %s" % (beginrev + 1, endrev, branch)
     os.system(log_cmd)
+    if opts.diff:
+        print
+        print " ", merge_cmd
+        print
     if not opts.dry_run:
         os.system(merge_cmd)
 
