@@ -318,7 +318,7 @@ def branchpoints(branch, svnlog=svnlog):
 def ezmerge(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
-                "usage: %prog [options] rev source-branch [wc-path]",
+                "usage: %prog [options] [rev] source-branch [wc-path]",
                 prog=progname,
                 description="merge changes from Subversion branches")
     parser.add_option('-d', '--diff',
@@ -329,15 +329,19 @@ def ezmerge(argv, progname=None):
                       action='store_true', dest='dry_run', default=False)
     try:
         opts, args = parser.parse_args(argv[1:])
-        if len(args) < 2:
+        if len(args) < 1:
             parser.error("too few arguments, try %s --help" % progname)
         elif len(args) > 3:
             parser.error("too many arguments, try %s --help" % progname)
     except optparse.OptParseError, e:
         sys.exit(e)
 
-    rev = args[0]
-    branchname = args[1]
+    if len(args) == 1:
+        rev = 'ALL'
+        branchname = args[0]
+    else:
+        rev = args[0]
+        branchname = args[1]
     path = '.'
     if len(args) > 2:
         path = args[2]
