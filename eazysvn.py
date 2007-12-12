@@ -318,9 +318,13 @@ def branchpoints(branch, svnlog=svnlog):
 def ezmerge(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
-                "usage: %prog [options] [rev] source-branch [wc-path]",
+                "usage: %prog [options] [rev] source-branch [wc-path]"
+                "       %prog -l\n",
                 prog=progname,
                 description="merge changes from Subversion branches")
+    parser.add_option('-l', '--list',
+                      help='list existing branches',
+                      action='store_true', dest='list_branches', default=False)
     parser.add_option('-d', '--diff',
                       help='show a diff of changes on the branch',
                       action='store_true', dest='diff', default=False)
@@ -329,12 +333,18 @@ def ezmerge(argv, progname=None):
                       action='store_true', dest='dry_run', default=False)
     try:
         opts, args = parser.parse_args(argv[1:])
-        if len(args) < 1:
-            parser.error("too few arguments, try %s --help" % progname)
-        elif len(args) > 3:
-            parser.error("too many arguments, try %s --help" % progname)
+        if not opts.list_branches:
+            if len(args) < 1:
+                parser.error("too few arguments, try %s --help" % progname)
+            elif len(args) > 3:
+                parser.error("too many arguments, try %s --help" % progname)
     except optparse.OptParseError, e:
         sys.exit(e)
+
+    if opts.list_branches:
+        # TODO: allow a different wc-path
+        print '\n'.join(listbranches('.'))
+        return
 
     if len(args) == 1:
         rev = 'ALL'
