@@ -2,7 +2,7 @@
 # 
 # Make simple Subversion revision merges and branch switching much easier.
 #
-# Copyright (c) 2006-2007 Philipp von Weitershausen, Marius Gedminas
+# Copyright (c) 2006--2008 Philipp von Weitershausen, Marius Gedminas
 #
 # This program is distributed under the terms of the GNU General Public Licence
 # See the file COPYING for details.
@@ -618,6 +618,34 @@ def mvbranch(argv, progname=None):
         os.system(cmd)
 
 
+def branchdiff(argv, progname=None):
+    progname = progname or os.path.basename(argv[0])
+    parser = optparse.OptionParser(
+                "usage: %prog [options] [branch [wc-path]]"
+                "       %prog -l\n",
+                prog=progname,
+                description="show combined diff of all changes made on a branch")
+    parser.add_option('-l', '--list',
+                      help='list existing branches',
+                      action='store_true', dest='list_branches', default=False)
+    opts, args = parser.parse_args(argv[1:])
+    path = '.'
+    if opts.list_branches:
+        print '\n'.join(listbranches(path))
+        return
+    if args:
+        branch = args[0]
+        if len(args) > 1:
+            path = args[1]
+        branch = determinebranch(args[0], path)
+    else:
+        branch = currentbranch(path)
+    beginrev, endrev = branchpoints(branch)
+    diff_cmd = "svn diff -r %s:%s %s" % (beginrev, endrev, branch)
+    print diff_cmd
+    os.system(diff_cmd)
+
+
 def selftest(argv, progname=None):
     import doctest
     failures, tests = doctest.testmod()
@@ -634,6 +662,7 @@ def help(argv, progname=None):
     print "  revert     -- revert checkins"
     print "  rmbranch   -- remove branches"
     print "  branchurl  -- print full URL of a branch"
+    print "  branchdiff -- show combined diff of all changes on a branch"
     print "  selftest   -- run self-tests"
     print "  help       -- this help message"
     print "Use %s command --help for more information about commands" % progname
@@ -648,6 +677,7 @@ def eazysvn(argv):
         'rmbranch': rmbranch,
         'mvbranch': mvbranch,
         'branchurl': ezbranch,
+        'branchdiff': branchdiff,
         'selftest': selftest,
         'help': help,
         '-h': help,
