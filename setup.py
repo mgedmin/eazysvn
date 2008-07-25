@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
 
+from eazysvn import ALIASES
+
+
 setup(
     name='eazysvn',
     version='1.8.0dev',
@@ -18,10 +21,6 @@ setup(
     entry_points="""
     [console_scripts]
     eazysvn = eazysvn:main
-    ezmerge = eazysvn:main
-    ezswitch = eazysvn:main
-    ezbranch = eazysvn:main
-    ezrevert = eazysvn:main
-    """,
+    """ + '\n'.join('%s = eazysvn:main' % alias for alias in ALIASES),
     test_suite='eazysvn',
 )

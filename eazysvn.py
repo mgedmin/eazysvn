@@ -394,6 +394,7 @@ def command(cmd, help_msg, alias=None):
         if alias:
             ALIASES[alias] = fn
         fn.help_msg = help_msg
+        fn.alias = alias
         return fn
     return decorator
 
@@ -790,7 +791,11 @@ def help(argv, progname=None):
     print "where command is one of"
     width = max(map(len, COMMANDS))
     for cmd, fn in sorted(COMMANDS.items()):
-        print "  %s -- %s" % (cmd.ljust(width), fn.help_msg)
+        if fn.alias:
+            alias = ' (aka %s)' % fn.alias
+        else:
+            alias = ''
+        print "  %s -- %s%s" % (cmd.ljust(width), fn.help_msg, alias)
     print "Use %s command --help for more information about commands" % progname
 
 
