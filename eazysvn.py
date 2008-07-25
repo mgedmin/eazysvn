@@ -21,6 +21,9 @@ import popen2 # TODO: use subprocess
 from xml.dom import minidom
 
 
+VERSION = '1.8.0dev'
+
+
 #
 # Helpers
 #
@@ -816,6 +819,9 @@ def eazysvn(argv):
 
 
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == '--version':
+        print "eazysvn version %s" % VERSION
+        sys.exit(0)
     cmd = os.path.basename(sys.argv[0])
     if cmd.endswith('.py'):
         cmd = cmd[:-len('.py')]

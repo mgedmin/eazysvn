@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
 
-from eazysvn import ALIASES
+from eazysvn import ALIASES, VERSION
 
 
 setup(
     name='eazysvn',
-    version='1.8.0dev',
+    version=VERSION,
     author='Philipp von Weitershausen',
     author_email='philipp@weitershausen.de',
     maintainer='Marius Gedminas',
