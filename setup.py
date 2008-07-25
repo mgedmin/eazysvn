@@ -1,8 +1,10 @@
 #!/usr/bin/env python
+import os
 from setuptools import setup, find_packages
 
 from eazysvn import ALIASES, VERSION
 
+readme = os.path.join(os.path.dirname(__file__), 'README.txt')
 
 setup(
     name='eazysvn',
@@ -14,6 +16,7 @@ setup(
     url='http://mg.pov.lt/eazysvn/',
     download_url='http://pypi.python.org/pypi/eazysvn',
     description='Make simple revision merges and branch switching much easier',
+    long_description=file(readme).read(),
     license='GPL',
 
     py_modules=['eazysvn'],
