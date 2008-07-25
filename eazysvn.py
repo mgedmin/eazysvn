@@ -754,6 +754,7 @@ def help(argv, progname=None):
     print "  switch     -- switch to a different branch"
     print "  merge      -- merge branches"
     print "  revert     -- revert checkins"
+    print "  tag        -- make tags"
     print "  rmbranch   -- remove branches"
     print "  branchurl  -- print full URL of a branch"
     print "  branchdiff -- show combined diff of all changes on a branch"
