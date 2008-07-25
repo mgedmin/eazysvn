@@ -12,7 +12,7 @@ setup(
     maintainer='Marius Gedminas',
     maintainer_email='marius@gedmin.as',
     url='http://mg.pov.lt/eazysvn/',
-    download_url='http://mg.pov.lt/eazysvn/svn/#egg=eazysvn-dev',
+    download_url='http://pypi.python.org/pypi/eazysvn',
     description='Make simple revision merges and branch switching much easier',
     license='GPL',
 
