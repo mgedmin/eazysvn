@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='eazysvn',
-    version='1.7.0',
+    version='1.8.0dev',
     author='Philipp von Weitershausen',
     author_email='philipp@weitershausen.de',
     maintainer='Marius Gedminas',

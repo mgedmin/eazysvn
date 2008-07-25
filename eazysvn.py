@@ -218,6 +218,66 @@ def determinebranch(branch, path, svninfo=svninfo):
     return '/'.join(new_chunks)
 
 
+def determinetag(tagname, path, svninfo=svninfo):
+    """
+    Let's set up a dummy 'svn info' command handler:
+
+      >>> def dummyinfo(path):
+      ...     return '''\
+      ... Path: .
+      ... URL: http://dev.worldcookery.com/svn/bla/trunk/blergh
+      ... Repository UUID: ab69c8a2-bfcb-0310-9bff-acb20127a769
+      ... Revision: 1654
+      ... Node Kind: directory
+      ... '''
+
+    ``determinetag()`` takes the svn path of the current working
+    directory path and mangles it to point to a named tag.
+    Here's an example:
+
+      >>> determinetag('foobar', '.', svninfo=dummyinfo)
+      'http://dev.worldcookery.com/svn/bla/tags/foobar/blergh'
+
+    We can do the same with branches
+
+      >>> def dummyinfo(path):
+      ...     return '''\
+      ... Path: .
+      ... URL: http://dev.worldcookery.com/svn/bla/branches/foobar/blergh
+      ... Repository UUID: ab69c8a2-bfcb-0310-9bff-acb20127a769
+      ... Revision: 1654
+      ... Node Kind: directory
+      ... '''
+
+      >>> determinetag('foobaz', '.', svninfo=dummyinfo)
+      'http://dev.worldcookery.com/svn/bla/tags/foobaz/blergh'
+ 
+    """
+    lines = svninfo(path).splitlines()
+    if lines[1].startswith('URL: '):
+        url = lines[1][5:]
+    else:
+        url = lines[2][5:]
+
+    chunks = url.split('/')
+    chunks.reverse()
+    new_chunks = []
+
+    while chunks:
+        ch = chunks.pop()
+        if ch in ('branch', 'branches'):
+            chunks.pop()
+            new_chunks.append('tags')
+            new_chunks.append(tagname)
+        elif ch == 'trunk':
+            new_chunks.append('tags')
+            new_chunks.append(tagname)
+        else:
+            new_chunks.append(ch)
+
+    return '/'.join(new_chunks)
+
+
 def listbranches(path, svninfo=svninfo, svnls=svnls):
     r"""
     Let's set up a dummy 'svn info' command handler:
@@ -497,6 +557,40 @@ def ezswitch(argv, progname=None):
         os.system(cmd)
 
 
+def eztag(argv, progname=None):
+    progname = progname or os.path.basename(argv[0])
+    parser = optparse.OptionParser(
+                "usage: %prog [-n] [-m MSG] newtagname",
+                prog=progname,
+                description="Make a Subversion tag.")
+    parser.add_option('-m',
+                      help='commit message',
+                      action='store', dest='message', default=None)
+    parser.add_option('-n', '--dry-run',
+                      help='do not make the tag, just print the command',
+                      action='store_true', dest='dry_run', default=False)
+    try:
+        opts, args = parser.parse_args(argv[1:])
+        if len(args) > 2:
+            parser.error("too many arguments, try %s --help" % progname)
+    except optparse.OptParseError, e:
+        sys.exit(e)
+
+    # TODO: allow a different wc-path
+    path = '.'
+
+    if len(args) < 1:
+        parser.error("too few arguments, try %s --help" % progname)
+    newtag = determinetag(args[0], path)
+
+    cmd = "svn cp %s %s" % (path, newtag)
+    if opts.message:
+        cmd += " -m '%s'" % opts.message
+    print cmd
+    if not opts.dry_run:
+        os.system(cmd)
+
+
 def ezbranch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
@@ -674,6 +768,7 @@ def eazysvn(argv):
         'merge': ezmerge,
         'revert': ezrevert,
         'switch': ezswitch,
+        'tag': eztag,
         'rmbranch': rmbranch,
         'mvbranch': mvbranch,
         'branchurl': ezbranch,
