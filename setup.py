@@ -23,4 +23,5 @@ setup(
     ezbranch = eazysvn:main
     ezrevert = eazysvn:main
     """,
+    test_suite='eazysvn',
 )

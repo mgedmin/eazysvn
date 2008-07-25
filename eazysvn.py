@@ -747,6 +747,11 @@ def selftest(argv, progname=None):
         print "All %d tests passed." % tests
 
 
+def additional_tests(): # for setup.py test
+    import doctest
+    return doctest.DocTestSuite()
+
+
 def help(argv, progname=None):
     progname = os.path.basename(argv[0])
     print "usage: %s command arguments" % progname
