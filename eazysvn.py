@@ -21,6 +21,10 @@ import popen2 # TODO: use subprocess
 from xml.dom import minidom
 
 
+#
+# Helpers
+#
+
 def revs(rev):
     """
     Make sense out of convenient way of mentioning revisions
@@ -375,6 +379,30 @@ def branchpoints(branch, svnlog=svnlog):
             int(newest_entry.getAttribute('revision')))
 
 
+#
+# Command registration
+#
+
+
+COMMANDS = {}
+ALIASES = {}
+
+def command(cmd, help_msg, alias=None):
+    """Register a command."""
+    def decorator(fn):
+        COMMANDS[cmd] = fn
+        if alias:
+            ALIASES[alias] = fn
+        fn.help_msg = help_msg
+        return fn
+    return decorator
+
+
+#
+# Commands
+#
+
+@command('merge', 'merge branches', alias="ezmerge")
 def ezmerge(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
@@ -454,6 +482,7 @@ def ezmerge(argv, progname=None):
         os.system(merge_cmd)
 
 
+@command('revert', 'revert checkins', alias="ezrevert")
 def ezrevert(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
@@ -496,6 +525,7 @@ def ezrevert(argv, progname=None):
         os.system(merge_cmd)
 
 
+@command('switch', 'switch to a different branch', alias="ezswitch")
 def ezswitch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
@@ -557,6 +587,7 @@ def ezswitch(argv, progname=None):
         os.system(cmd)
 
 
+@command('tag', 'make tags')
 def eztag(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
@@ -591,6 +622,7 @@ def eztag(argv, progname=None):
         os.system(cmd)
 
 
+@command('branchurl', 'print full URL of a branch', alias="ezbranch")
 def ezbranch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
@@ -627,6 +659,7 @@ def ezbranch(argv, progname=None):
     print determinebranch(branch, path)
 
 
+@command('rmbranch', 'remove branches')
 def rmbranch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
@@ -669,6 +702,7 @@ def rmbranch(argv, progname=None):
         os.system(cmd)
 
 
+@command('mvbranch', 'rename branches')
 def mvbranch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
@@ -712,6 +746,7 @@ def mvbranch(argv, progname=None):
         os.system(cmd)
 
 
+@command('branchdiff', 'show combined diff of all changes on a branch')
 def branchdiff(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
@@ -740,6 +775,7 @@ def branchdiff(argv, progname=None):
     os.system(diff_cmd)
 
 
+@command('selftest', 'run self-tests')
 def selftest(argv, progname=None):
     import doctest
     failures, tests = doctest.testmod()
@@ -747,47 +783,27 @@ def selftest(argv, progname=None):
         print "All %d tests passed." % tests
 
 
-def additional_tests(): # for setup.py test
-    import doctest
-    return doctest.DocTestSuite()
-
-
+@command('help', 'this help message')
 def help(argv, progname=None):
     progname = os.path.basename(argv[0])
     print "usage: %s command arguments" % progname
     print "where command is one of"
-    print "  switch     -- switch to a different branch"
-    print "  merge      -- merge branches"
-    print "  revert     -- revert checkins"
-    print "  tag        -- make tags"
-    print "  rmbranch   -- remove branches"
-    print "  branchurl  -- print full URL of a branch"
-    print "  branchdiff -- show combined diff of all changes on a branch"
-    print "  selftest   -- run self-tests"
-    print "  help       -- this help message"
+    width = max(map(len, COMMANDS))
+    for cmd, fn in sorted(COMMANDS.items()):
+        print "  %s -- %s" % (cmd.ljust(width), fn.help_msg)
     print "Use %s command --help for more information about commands" % progname
 
 
+#
+# Dispatch
+#
+
 def eazysvn(argv):
     progname = os.path.basename(argv[0])
-    commands = {
-        'merge': ezmerge,
-        'revert': ezrevert,
-        'switch': ezswitch,
-        'tag': eztag,
-        'rmbranch': rmbranch,
-        'mvbranch': mvbranch,
-        'branchurl': ezbranch,
-        'branchdiff': branchdiff,
-        'selftest': selftest,
-        'help': help,
-        '-h': help,
-        '--help': help,
-        }
-    if len(argv) < 2:
+    if len(argv) < 2 or argv[1] in ('-h', '--help'):
         return help(argv)
     cmd = argv.pop(1)
-    func = commands.get(cmd)
+    func = COMMANDS.get(cmd)
     if func is None:
         sys.exit("Unknown command: %s." % cmd)
     progname = progname + ' ' + cmd
@@ -798,14 +814,14 @@ def main():
     cmd = os.path.basename(sys.argv[0])
     if cmd.endswith('.py'):
         cmd = cmd[:-len('.py')]
-    commands = {
-        'ezmerge': ezmerge,
-        'ezswitch': ezswitch,
-        'ezbranch': ezbranch,
-        'ezrevert': ezrevert,
-        }
-    func = commands.get(cmd, eazysvn)
+    func = ALIASES.get(cmd, eazysvn)
     sys.exit(func(sys.argv))
+
+
+def additional_tests(): # for setup.py test
+    import doctest
+    return doctest.DocTestSuite()
+
 
 if __name__ == '__main__':
     main()
