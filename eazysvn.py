@@ -196,6 +196,20 @@ def determinebranch(branch, path, svninfo=svninfo):
       >>> determinebranch('trunk', '.', svninfo=dummyinfo)
       'http://dev.worldcookery.com/svn/bla/trunk/blergh'
  
+    You can use tags too
+
+      >>> def dummyinfo(path):
+      ...     return '''\
+      ... Path: .
+      ... URL: http://dev.worldcookery.com/svn/bla/branches/foobar/blergh
+      ... Repository UUID: ab69c8a2-bfcb-0310-9bff-acb20127a769
+      ... Revision: 1654
+      ... Node Kind: directory
+      ... '''
+
+      >>> determinebranch('tag/3.4', '.', svninfo=dummyinfo)
+      'http://dev.worldcookery.com/svn/bla/tag/3.4/blergh'
+
     """
     lines = svninfo(path).splitlines()
     if lines[1].startswith('URL: '):
@@ -206,6 +220,7 @@ def determinebranch(branch, path, svninfo=svninfo):
     chunks = url.split('/')
     chunks.reverse()
     new_chunks = []
+    is_tag = branch.startswith('tag/') or branch.startswith('tags/')
 
     while chunks:
         ch = chunks.pop()
@@ -214,10 +229,12 @@ def determinebranch(branch, path, svninfo=svninfo):
             if branch == 'trunk':
                 new_chunks.append(branch)
             else:
-                new_chunks.append(ch)
+                if not is_tag:
+                    new_chunks.append(ch)
                 new_chunks.append(branch)
         elif ch == 'trunk' and branch != 'trunk':
-            new_chunks.append('branches')
+            if not is_tag:
+                new_chunks.append('branches')
             new_chunks.append(branch)
         else:
             new_chunks.append(ch)
