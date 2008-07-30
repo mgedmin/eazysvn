@@ -348,6 +348,7 @@ def listbranches(path, svninfo=svninfo, svnls=svnls):
             break
         elif ch in ('tags', 'branches', 'trunk'):
             chunks.append('branches')
+            break
 
     branches = []
     for line in svnls('/'.join(chunks)).splitlines():
