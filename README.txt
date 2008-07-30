@@ -318,6 +318,11 @@ avoid accidentally making new changes that will be harder to merge.
 Changelog
 =========
 
+1.8.1 (unreleased)
+------------------
+
+* ``eazysvn tag`` accepts the -l (--list) option.
+
 1.8.0 (2008-06-26)
 ------------------
 
@@ -436,8 +441,6 @@ Wishlist/Todo
 =============
 
 ``ezmerge`` should accept a comma-separated list of revisions (1,2,4-6,9).
-
-``eazysvn tag -l`` should list all tags.
 
 There should be ``eazysvn rmtag`` and ``eazysvn mvtag``.
 

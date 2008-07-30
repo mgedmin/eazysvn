@@ -336,6 +336,57 @@ def listbranches(path, svninfo=svninfo, svnls=svnls):
     return branches
 
 
+def listtags(path, svninfo=svninfo, svnls=svnls):
+    r"""
+    Let's set up a dummy 'svn info' command handler:
+
+      >>> def dummyinfo(path):
+      ...     return '''\
+      ... Path: .
+      ... URL: http://dev.worldcookery.com/svn/bla/trunk/blergh
+      ... Repository UUID: ab69c8a2-bfcb-0310-9bff-acb20127a769
+      ... Revision: 1654
+      ... Node Kind: directory
+      ... '''
+
+    and a dummy 'svn ls' as well:
+
+      >>> def dummyls(path):
+      ...     assert path == 'http://dev.worldcookery.com/svn/bla/tags'
+      ...     return '''\
+      ... foo/
+      ... README.txt
+      ... bar/
+      ... baz/
+      ... '''
+
+    ``listtags()`` takes the svn path of the current working
+    directory path, finds the URL of the repository, and lists all tags
+    in that repository.
+
+      >>> listtags('.', svninfo=dummyinfo, svnls=dummyls)
+      ['foo', 'bar', 'baz']
+ 
+    """
+    url = currentbranch(path, svninfo=svninfo)
+    chunks = url.split('/')
+
+    while chunks:
+        ch = chunks.pop()
+        if ch in ('trunk', 'branches', 'tags'):
+            chunks.append('tags')
+            break
+        elif ch in ('branch', 'tag'):
+            chunks.append('tag')
+            break
+
+    branches = []
+    for line in svnls('/'.join(chunks)).splitlines():
+        if line.endswith('/'):
+            branches.append(line[:-1])
+    return branches
+
+
 def branchpoints(branch, svnlog=svnlog):
     r"""
     Let's set up a dummy 'svn log' command handler:
@@ -604,6 +655,9 @@ def eztag(argv, progname=None):
     parser.add_option('-n', '--dry-run',
                       help='do not make the tag, just print the command',
                       action='store_true', dest='dry_run', default=False)
+    parser.add_option('-l', '--list',
+                      help='list existing tags',
+                      action='store_true', dest='list_tags', default=False)
     try:
         opts, args = parser.parse_args(argv[1:])
         if len(args) > 2:
@@ -613,6 +667,11 @@ def eztag(argv, progname=None):
 
     # TODO: allow a different wc-path
     path = '.'
+
+    if opts.list_tags:
+        # TODO: allow a different wc-path
+        print '\n'.join(listtags('.'))
+        return
 
     if len(args) < 1:
         parser.error("too few arguments, try %s --help" % progname)
