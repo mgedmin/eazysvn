@@ -194,6 +194,14 @@ shell):
   svn ls $(ezbranch *branchname*)
   svn diff \`ezbranch *branch1*\` \`ezbranch *branch2*\`
 
+Another possibly useful eazysvn command is ``branchpoint``.  It shows the
+revision when a branch was created.  For example, to see the changes
+in trunk that are not present in a branch, run
+
+.. parsed-literal::
+
+  svn diff -r \`eazysvn branchpoint *branch*\`:HEAD \`ezbranch *trunk*\`
+
 
 Overall options
 ---------------
@@ -322,6 +330,9 @@ Changelog
 ------------------
 
 * ``eazysvn tag`` accepts the -l (--list) option.
+* New command: ``eazysvn branchpoint``.
+* You can refer to tags in all commands that accept branch names; use a branch
+  named "tags/*tagname*".
 
 1.8.0 (2008-06-26)
 ------------------

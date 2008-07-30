@@ -855,6 +855,33 @@ def branchdiff(argv, progname=None):
     os.system(diff_cmd)
 
 
+@command('branchpoint', 'show the revision number when a branch was created')
+def branchpoint(argv, progname=None):
+    progname = progname or os.path.basename(argv[0])
+    parser = optparse.OptionParser(
+                "usage: %prog [options] [branch [wc-path]]"
+                "       %prog -l\n",
+                prog=progname,
+                description="show the revision number when a branch was created")
+    parser.add_option('-l', '--list',
+                      help='list existing branches',
+                      action='store_true', dest='list_branches', default=False)
+    opts, args = parser.parse_args(argv[1:])
+    path = '.'
+    if opts.list_branches:
+        print '\n'.join(listbranches(path))
+        return
+    if args:
+        branch = args[0]
+        if len(args) > 1:
+            path = args[1]
+        branch = determinebranch(args[0], path)
+    else:
+        branch = currentbranch(path)
+    beginrev, endrev = branchpoints(branch)
+    print beginrev
+
+
 @command('selftest', 'run self-tests')
 def selftest(argv, progname=None):
     import doctest
