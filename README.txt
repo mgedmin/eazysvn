@@ -330,6 +330,7 @@ Changelog
 ------------------
 
 * ``eazysvn tag`` accepts the -l (--list) option.
+* ``ezbranch`` accepts the -t option.
 * New command: ``eazysvn branchpoint``.
 * You can refer to tags in all commands that accept branch names; use a branch
   named "tags/*tagname*".

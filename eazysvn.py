@@ -224,7 +224,7 @@ def determinebranch(branch, path, svninfo=svninfo):
 
     while chunks:
         ch = chunks.pop()
-        if ch in ('branch', 'branches'):
+        if ch in ('branch', 'branches', 'tag', 'tags'):
             chunks.pop()
             if branch == 'trunk':
                 new_chunks.append(branch)
@@ -289,9 +289,13 @@ def determinetag(tagname, path, svninfo=svninfo):
 
     while chunks:
         ch = chunks.pop()
-        if ch in ('branch', 'branches'):
+        if ch in ('branches', 'tags'):
             chunks.pop()
             new_chunks.append('tags')
+            new_chunks.append(tagname)
+        elif ch in ('branch', 'tag'):
+            chunks.pop()
+            new_chunks.append('tag')
             new_chunks.append(tagname)
         elif ch == 'trunk':
             new_chunks.append('tags')
@@ -339,12 +343,11 @@ def listbranches(path, svninfo=svninfo, svnls=svnls):
 
     while chunks:
         ch = chunks.pop()
-        if ch in ('branch', 'branches'):
-            chunks.append(ch)
+        if ch in ('tag', 'branch'):
+            chunks.append('branch')
             break
-        elif ch == 'trunk':
+        elif ch in ('tags', 'branches', 'trunk'):
             chunks.append('branches')
-            break
 
     branches = []
     for line in svnls('/'.join(chunks)).splitlines():
@@ -714,6 +717,9 @@ def ezbranch(argv, progname=None):
     parser.add_option('-l', '--list',
                       help='list existing branches',
                       action='store_true', dest='list_branches', default=False)
+    parser.add_option('-t', '--tag',
+                      help='look for a tag instead of a branch',
+                      action='store_true', dest='tag', default=False)
     try:
         opts, args = parser.parse_args(argv[1:])
         if len(args) > 2:
@@ -733,6 +739,9 @@ def ezbranch(argv, progname=None):
         return
 
     branch = args[0]
+    if opt.tag:
+        branch = 'tags/' + branch
+
     if len(args) > 1:
         path = args[1]
 
