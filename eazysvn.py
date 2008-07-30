@@ -711,7 +711,7 @@ def ezbranch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
                 "usage: %prog branch [wc-path]\n"
-                "       %prog -l\n"
+                "       %prog -l [-t]\n"
                 "       %prog",
                 prog=progname,
                 description="Print the URL of a named branch.")
@@ -732,7 +732,10 @@ def ezbranch(argv, progname=None):
 
     if opts.list_branches:
         # TODO: allow a different wc-path
-        print '\n'.join(listbranches(path))
+        if opts.tag:
+            print '\n'.join(listtags(path))
+        else:
+            print '\n'.join(listbranches(path))
         return
 
     if not args:
