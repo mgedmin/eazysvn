@@ -740,7 +740,7 @@ def ezbranch(argv, progname=None):
         return
 
     branch = args[0]
-    if opt.tag:
+    if opts.tag:
         branch = 'tags/' + branch
 
     if len(args) > 1:
