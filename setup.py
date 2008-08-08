@@ -5,6 +5,13 @@ from setuptools import setup, find_packages
 from eazysvn import ALIASES, VERSION
 
 readme = os.path.join(os.path.dirname(__file__), 'README.txt')
+changelog = os.path.join(os.path.dirname(__file__), 'CHANGES.txt')
+
+changes_in_last_version = file(changelog).read().split('\n\n\n')[1]
+
+long_description = file(readme).read().replace('See CHANGES.txt',
+                                               changes_in_last_version)
+
 
 setup(
     name='eazysvn',
@@ -16,7 +23,7 @@ setup(
     url='http://mg.pov.lt/eazysvn/',
     download_url='http://pypi.python.org/pypi/eazysvn',
     description='Make simple revision merges and branch switching much easier',
-    long_description=file(readme).read(),
+    long_description=long_description,
     license='GPL',
 
     py_modules=['eazysvn'],
