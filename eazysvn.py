@@ -220,7 +220,7 @@ def determinebranch(branch, path, svninfo=svninfo):
     chunks = url.split('/')
     chunks.reverse()
     new_chunks = []
-    is_tag = branch.startswith('tag/') or branch.startswith('tags/')
+    is_tag = '/' in branch
 
     while chunks:
         ch = chunks.pop()

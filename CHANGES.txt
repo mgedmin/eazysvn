@@ -9,7 +9,8 @@ Changelog
 * ``ezbranch`` and ``ezswitch`` accept the -t option.
 * New command: ``eazysvn branchpoint``.
 * You can refer to tags in all commands that accept branch names; use a branch
-  named "tags/*tagname*".
+  named "tags/*tagname*".  This works for all kinds of prefixes, e.g.
+  "obsolete-branches/*branchname*" etc.
 
 
 1.8.0 (2008-06-26)

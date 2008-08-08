@@ -295,6 +295,20 @@ Eazysvn will be able to find the location of trunk or other branches if you
 start out in a branch checkout, but it won't be able to find your branches
 from a trunk checkout.  This is a bug that should be fixed one day.
 
+You can force eazysvn to use any nonstandard scheme if you explicitly enter the
+prefix with a slash in front of the branch name, e.g. ``ezswitch feature/foo``
+in a trunk checkout would switch from
+
+.. parsed-literal::
+
+  *scheme://server/path/to/svn/repo*/trunk/*subdirs*
+
+to
+
+.. parsed-literal::
+
+  *scheme://server/path/to/svn/repo*/feature/foo/*subdirs*
+
 
 Branch merge logic
 ------------------
@@ -359,7 +373,8 @@ Wishlist/Todo
 
 There should be ``eazysvn rmtag`` and ``eazysvn mvtag``.
 
-``eazysvn help cmd`` should be the same as ``eazysvn cmd --help`` and not an error.
+``eazysvn help cmd`` should be the same as ``eazysvn cmd --help`` and not an
+error.
 
 ``eazysvn -n cmd`` should be the same as ``eazysvn cmd -n`` and not an error.
 
