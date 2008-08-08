@@ -309,6 +309,10 @@ to
 
   *scheme://server/path/to/svn/repo*/feature/foo/*subdirs*
 
+If you start out in a checkout of such a nonstandard location, Eazysvn won't be
+able to find the location of trunk or other branches.  This is a bug that
+should be fixed one day.
+
 
 Branch merge logic
 ------------------
