@@ -21,7 +21,7 @@ import popen2 # TODO: use subprocess
 from xml.dom import minidom
 
 
-VERSION = '1.9.0dev'
+VERSION = '1.9.0'
 
 
 #
