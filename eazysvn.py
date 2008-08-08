@@ -606,7 +606,8 @@ def ezswitch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
                 "usage: %prog [-n] [-c] [-m MSG] branch [wc-path]\n"
-                "       %prog -l\n"
+                "       %prog [-n] [-c] [-m MSG] -t tag [wc-path]\n"
+                "       %prog -l [-t]\n"
                 "       %prog",
                 prog=progname,
                 description="Switch the working directory to a different"
@@ -616,6 +617,9 @@ def ezswitch(argv, progname=None):
     parser.add_option('-l', '--list',
                       help='list existing branches',
                       action='store_true', dest='list_branches', default=False)
+    parser.add_option('-t', '--tag',
+                      help='look for a tag instead of a branch',
+                      action='store_true', dest='tag', default=False)
     parser.add_option('-c', '--create-branch',
                       help='create the new branch before switching to it',
                       action='store_true', dest='create_branch', default=False)
@@ -636,7 +640,10 @@ def ezswitch(argv, progname=None):
 
     if opts.list_branches:
         # TODO: allow a different wc-path
-        print '\n'.join(listbranches(path))
+        if opts.tag:
+            print '\n'.join(listtags(path))
+        else:
+            print '\n'.join(listbranches(path))
         return
 
     if not args:
@@ -644,6 +651,9 @@ def ezswitch(argv, progname=None):
         return
 
     branch = args[0]
+    if opts.tag:
+        branch = 'tags/' + branch
+
     if len(args) > 1:
         path = args[1]
 
