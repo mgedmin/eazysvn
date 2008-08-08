@@ -326,7 +326,7 @@ avoid accidentally making new changes that will be harder to merge.
 Changelog
 =========
 
-1.8.1 (unreleased)
+1.9.0 (unreleased)
 ------------------
 
 * ``eazysvn tag`` accepts the -l (--list) option.
