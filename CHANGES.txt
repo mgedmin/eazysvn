@@ -2,7 +2,14 @@ Changelog
 =========
 
 
-1.9.0 (unreleased)
+1.10.0 (2009-04-08)
+-------------------
+
+* Uses ``subprocess`` instead of ``os.popen2``; no more deprecation warnings
+  on Python 2.6.
+
+
+1.9.0 (2008-08-08)
 ------------------
 
 * ``eazysvn tag`` accepts the -l (--list) option.

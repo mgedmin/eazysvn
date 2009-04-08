@@ -2,7 +2,7 @@
 # 
 # Make simple Subversion revision merges and branch switching much easier.
 #
-# Copyright (c) 2006--2008 Philipp von Weitershausen, Marius Gedminas
+# Copyright (c) 2006--2009 Philipp von Weitershausen, Marius Gedminas
 #
 # This program is distributed under the terms of the GNU General Public Licence
 # See the file COPYING for details.
@@ -17,11 +17,11 @@
 import os
 import sys
 import optparse
-import popen2 # TODO: use subprocess
+import subprocess
 from xml.dom import minidom
 
 
-VERSION = '1.9.1dev'
+VERSION = '1.10.0'
 
 
 #
@@ -95,25 +95,25 @@ def svninfo(path):
     """
     Return svn information about ``path``.
     """
-    stdout, stdin = popen2.popen2('svn info %s' % path)
-    return stdout.read()
+    p = subprocess.Popen(['svn', 'info', path], stdout=subprocess.PIPE)
+    return p.communicate()[0]
 
 
 def svnls(url):
     """
     Return a list of files under ``url``.
     """
-    stdout, stdin = popen2.popen2('svn ls %s' % url)
-    return stdout.read()
+    p = subprocess.Popen(['svn', 'ls', url], stdout=subprocess.PIPE)
+    return p.communicate()[0]
 
 
 def svnlog(url):
     """
     Return svn log of ``url``, stopping on branchpoints, in XML.
     """
-    stdout, stdin = popen2.popen2('svn log --non-interactive --stop-on-copy'
-                                  ' --xml %s' % url)
-    return stdout.read()
+    p = subprocess.Popen(['svn', 'log', '--non-interactive', '--stop-on-copy',
+                          '--xml', url], stdout=subprocess.PIPE)
+    return p.communicate()[0]
 
 
 def currentbranch(path, svninfo=svninfo):
