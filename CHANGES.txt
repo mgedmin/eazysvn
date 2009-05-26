@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.11.0 (unreleased)
+1.11.0 (2009-05-26)
 -------------------
 
 * New option: ``ezmerge --reintegrate``, passed straight to svn merge.
