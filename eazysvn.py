@@ -21,7 +21,7 @@ import subprocess
 from xml.dom import minidom
 
 
-VERSION = '1.11.0'
+VERSION = '1.11.1dev'
 
 
 #
@@ -482,8 +482,8 @@ def command(cmd, help_msg, alias=None):
 def ezmerge(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
-                "usage: %prog [options] [rev] source-branch [wc-path]"
-                "       %prog -l\n",
+                "usage: %prog [options] [rev] source-branch [wc-path]\n"
+                "       %prog -l",
                 prog=progname,
                 description="merge changes from Subversion branches")
     parser.add_option('-l', '--list',
@@ -772,7 +772,7 @@ def rmbranch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
                 "usage: %prog [-n] [-m MSG] branch\n"
-                "       %prog -l\n",
+                "       %prog -l",
                 prog=progname,
                 description="Remove a named Subversion branch.")
     parser.add_option('-l', '--list',
@@ -815,7 +815,7 @@ def mvbranch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
                 "usage: %prog [-n] [-m MSG] oldbranch newbranch\n"
-                "       %prog -l\n",
+                "       %prog -l",
                 prog=progname,
                 description="Rename a Subversion branch.")
     parser.add_option('-l', '--list',
@@ -859,7 +859,7 @@ def branchdiff(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
                 "usage: %prog [options] [branch [wc-path]]"
-                "       %prog -l\n",
+                "       %prog -l",
                 prog=progname,
                 description="show combined diff of all changes made on a branch")
     parser.add_option('-l', '--list',
@@ -888,7 +888,7 @@ def branchpoint(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
                 "usage: %prog [options] [branch [wc-path]]"
-                "       %prog -l\n",
+                "       %prog -l",
                 prog=progname,
                 description="show the revision number when a branch was created")
     parser.add_option('-l', '--list',

@@ -2,6 +2,12 @@ Changelog
 =========
 
 
+1.11.1 (unreleased)
+-------------------
+
+* Minor fixes to various options --help messages.
+
+
 1.11.0 (2009-05-26)
 -------------------
 
