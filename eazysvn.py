@@ -21,7 +21,7 @@ import subprocess
 from xml.dom import minidom
 
 
-VERSION = '1.10.1dev'
+VERSION = '1.11.0dev'
 
 
 #
@@ -489,6 +489,9 @@ def ezmerge(argv, progname=None):
     parser.add_option('-l', '--list',
                       help='list existing branches',
                       action='store_true', dest='list_branches', default=False)
+    parser.add_option('-r', '--reintegrate',
+                      help='passed to svn merge',
+                      action='store_true', dest='reintegrate', default=False)
     parser.add_option('-d', '--diff',
                       help='show a diff of changes on the branch',
                       action='store_true', dest='diff', default=False)
@@ -540,7 +543,9 @@ def ezmerge(argv, progname=None):
     if opts.diff:
         merge_cmd = "svn diff -r %s:%s %s" % (beginrev, endrev, branch)
     else:
-        merge_cmd = "svn merge -r %s:%s %s %s" % (beginrev, endrev, branch, path)
+        reintegrate = opts.reintegrate and " --reintegrate" or ""
+        merge_cmd = "svn merge%s -r %s:%s %s %s" % (
+            reintegrate, beginrev, endrev, branch, path)
     if not opts.diff:
         print msg, "with"
         print

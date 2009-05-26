@@ -2,6 +2,13 @@ Changelog
 =========
 
 
+1.11.0 (unreleased)
+-------------------
+
+* New option: ``ezmerge --reintegrate``, passed straight to svn merge.
+  Contributed by Wolfgang Schnerring <wosc@wosc.de>.
+
+
 1.10.0 (2009-04-08)
 -------------------
 
