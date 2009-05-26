@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os
+import os, sys
 from setuptools import setup, find_packages
 
 from eazysvn import ALIASES, VERSION
@@ -12,6 +12,17 @@ changes_in_last_version = file(changelog).read().split('\n\n\n')[1]
 long_description = file(readme).read().replace('See CHANGES.txt',
                                                changes_in_last_version)
 
+first_changelog_line = changes_in_last_version.lstrip().split('\n', 1)[0]
+
+version_indicates_unreleased = VERSION.endswith('dev')
+changelog_indicates_unreleased = first_changelog_line.endswith('(unreleased)')
+version_in_version = VERSION.rstrip('dev')
+version_in_changelog = first_changelog_line.split()[0]
+
+if (version_in_version != version_in_changelog or
+    version_indicates_unreleased != changelog_indicates_unreleased):
+    print >> sys.stderr, "VERSION is %s, but last changelog entry is for %s" % (
+                            VERSION, first_changelog_line)
 
 setup(
     name='eazysvn',
