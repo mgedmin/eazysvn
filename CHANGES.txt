@@ -10,6 +10,9 @@ Changelog
 * Don't pass revision range to svn when using ``ezmerge --reintegrate``.
   Patch by Michael Howitz <mh@gocept.com>.
 
+* New option: ``ezmerge --tag``.
+  Contributed by Michael Howitz <mh@gocept.com>.
+
 
 1.11.0 (2009-05-26)
 -------------------

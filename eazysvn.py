@@ -495,6 +495,9 @@ def ezmerge(argv, progname=None):
     parser.add_option('-d', '--diff',
                       help='show a diff of changes on the branch',
                       action='store_true', dest='diff', default=False)
+    parser.add_option('-t', '--tag',
+                      help='use a tag instead of a branch',
+                      action='store_true', dest='tag', default=False)
     parser.add_option('-n', '--dry-run',
                       help='do not touch any files on disk or in subversion',
                       action='store_true', dest='dry_run', default=False)
@@ -510,7 +513,10 @@ def ezmerge(argv, progname=None):
 
     if opts.list_branches:
         # TODO: allow a different wc-path
-        print '\n'.join(listbranches('.'))
+        if opts.tag:
+            print '\n'.join(listtags('.'))
+        else:
+            print '\n'.join(listbranches('.'))
         return
 
     if len(args) == 1:
@@ -523,9 +529,15 @@ def ezmerge(argv, progname=None):
     if len(args) > 2:
         path = args[2]
 
-    branch = determinebranch(branchname, path)
+    if opts.tag:
+        branch = determinetag(branchname, path)
+    else:
+        branch = determinebranch(branchname, path)
     if branchname != 'trunk' and not branchname.endswith('branch'):
-        branchname += ' branch'
+        if opts.tag:
+            branchname += ' tag'
+        else:
+            branchname += ' branch'
     if rev == 'ALL':
         beginrev, endrev = branchpoints(branch)
         if branchname == 'trunk':
