@@ -5,6 +5,8 @@ Changelog
 1.12.1 (unreleased)
 -------------------
 
+* A somewhat better error message for ``ezswitch -c newbranch`` when eazysvn
+  is unable to understand the branch structure (LP#446369).
 
 
 1.12.0 (2010-07-22)

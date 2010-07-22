@@ -2,7 +2,7 @@
 # 
 # Make simple Subversion revision merges and branch switching much easier.
 #
-# Copyright (c) 2006--2009 Philipp von Weitershausen, Marius Gedminas
+# Copyright (c) 2006--2010 Philipp von Weitershausen, Marius Gedminas
 #
 # This program is distributed under the terms of the GNU General Public Licence
 # See the file COPYING for details.
@@ -679,6 +679,12 @@ def ezswitch(argv, progname=None):
     branch = determinebranch(branch, path)
     if opts.create_branch:
         cur_branch = currentbranch(path)
+        if cur_branch == branch:
+            # XXX determinebranch() should raise this kind of error
+            # instead of me doing it here
+            sys.exit("can't figure out the branch structure of %s\n"
+                     "expected a path element named trunk/branches/tags/branch/tag"
+                     % branch)
         cmd = "svn cp %s %s" % (cur_branch, branch)
         if opts.message:
             cmd += " -m '%s'" % opts.message
