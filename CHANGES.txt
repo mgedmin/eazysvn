@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.11.1 (unreleased)
+1.12.0 (2010-07-22)
 -------------------
 
 * Minor fixes to various options --help messages.

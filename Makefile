@@ -18,7 +18,7 @@ dist:
 distcheck:
 	# Bit of a chicken-and-egg here, but if the tree is unclean, make
 	# distcheck will fail.
-	#@test -z "`svn status 2>&1`" || { echo; echo "Your working tree is not clean" 1>&2; svn status; exit 1; }
+	@test -z "`svn status 2>&1`" || { echo; echo "Your working tree is not clean" 1>&2; svn status; exit 1; }
 	make dist
 	pkg_and_version=`$(PYTHON) setup.py --name`-`$(PYTHON) setup.py --version` && \
 	rm -rf tmp && \
