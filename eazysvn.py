@@ -543,9 +543,11 @@ def ezmerge(argv, progname=None):
     if opts.diff:
         merge_cmd = "svn diff -r %s:%s %s" % (beginrev, endrev, branch)
     else:
-        reintegrate = opts.reintegrate and " --reintegrate" or ""
-        merge_cmd = "svn merge%s -r %s:%s %s %s" % (
-            reintegrate, beginrev, endrev, branch, path)
+        if opts.reintegrate:
+            revisions = "--reintegrate"
+        else:
+            revisions = "-r %s:%s" % (beginrev, endrev)
+        merge_cmd = "svn merge %s %s %s" % (revisions, branch, path)
     if not opts.diff:
         print msg, "with"
         print

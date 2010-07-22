@@ -7,6 +7,9 @@ Changelog
 
 * Minor fixes to various options --help messages.
 
+* Don't pass revision range to svn when using ``ezmerge --reintegrate``.
+  Patch by Michael Howitz <mh@gocept.com>.
+
 
 1.11.0 (2009-05-26)
 -------------------
