@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.12.1 (unreleased)
+1.12.1 (2010-09-14)
 -------------------
 
 * A somewhat better error message for ``ezswitch -c newbranch`` when eazysvn
