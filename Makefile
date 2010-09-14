@@ -6,8 +6,8 @@ FILE_WITH_CHANGELOG = CHANGES.txt
 default:
 	@echo "Nothing to build here"
 
-.PHONY: check
-check:
+.PHONY: check test
+check test:
 	$(PYTHON) setup.py test
 
 .PHONY: dist

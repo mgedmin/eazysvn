@@ -8,6 +8,10 @@ Changelog
 * A somewhat better error message for ``ezswitch -c newbranch`` when eazysvn
   is unable to understand the branch structure (LP#446369).
 
+* ``ezswitch -t tagname; ezswitch branchname`` switches to a branch named
+  ``branchname`` instead of trying to switch to a tag named ``branchname``
+  (LP#617888, fix by Wolfgang Schnerring).
+
 
 1.12.0 (2010-07-22)
 -------------------
