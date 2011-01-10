@@ -509,6 +509,8 @@ def ezmerge(argv, progname=None):
     parser.add_option('-r', '--reintegrate',
                       help='passed to svn merge',
                       action='store_true', dest='reintegrate', default=False)
+    parser.add_option('--accept', metavar='ARG',
+                      help='passed to svn merge')
     parser.add_option('-d', '--diff',
                       help='show a diff of changes on the branch',
                       action='store_true', dest='diff', default=False)
@@ -572,11 +574,15 @@ def ezmerge(argv, progname=None):
     if opts.diff:
         merge_cmd = "svn diff -r %s:%s %s" % (beginrev, endrev, branch)
     else:
+        args = ["svn", "merge"]
         if opts.reintegrate:
-            revisions = "--reintegrate"
+            args += ["--reintegrate"]
         else:
-            revisions = "-r %s:%s" % (beginrev, endrev)
-        merge_cmd = "svn merge %s %s %s" % (revisions, branch, path)
+            args += ["-r %s:%s" % (beginrev, endrev)]
+        if opts.accept:
+            args += ['--accept', opts.accept]
+        args += [branch, path]
+        merge_cmd = " ".join(args)
     if not opts.diff:
         print msg, "with"
         print
