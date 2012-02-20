@@ -18,12 +18,12 @@ dist:
 distcheck:
 	# Bit of a chicken-and-egg here, but if the tree is unclean, make
 	# distcheck will fail.
-	@test -z "`svn status 2>&1`" || { echo; echo "Your working tree is not clean" 1>&2; svn status; exit 1; }
+	@test -z "`git status -s 2>&1`" || { echo; echo "Your working tree is not clean" 1>&2; git status; exit 1; }
 	make dist
 	pkg_and_version=`$(PYTHON) setup.py --name`-`$(PYTHON) setup.py --version` && \
 	rm -rf tmp && \
 	mkdir tmp && \
-	svn export . tmp/tree && \
+	git archive --format=tar --prefix=tmp/tree/ HEAD | tar -xf - && \
 	cd tmp && \
 	tar xvzf ../dist/$$pkg_and_version.tar.gz && \
 	diff -ur $$pkg_and_version tree -x PKG-INFO -x setup.cfg -x '*.egg-info' && \
@@ -56,11 +56,11 @@ release: releasechecklist
 	# I'm chicken so I won't actually do these things yet
 	@echo "Please run"
 	@echo
-	@echo "  $(PYTHON) setup.py sdist register upload && eazysvn tag `$(PYTHON) setup.py --version`"
+	@echo "  $(PYTHON) setup.py sdist register upload && git tag v`$(PYTHON) setup.py --version`"
 	@echo
 	@echo "Please increment the version number in $(FILE_WITH_VERSION)"
 	@echo "and add a new empty entry at the top of the changelog in $(FILE_WITH_CHANGELOG), then"
 	@echo
-	@echo '  svn ci -m "Post-release version bump"'
+	@echo '  git commit -a -m "Post-release version bump" && git push --tags'
 	@echo
 
