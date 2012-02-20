@@ -1,6 +1,6 @@
 PYTHON = python
 FILE_WITH_VERSION = eazysvn.py
-FILE_WITH_CHANGELOG = CHANGES.txt
+FILE_WITH_CHANGELOG = CHANGES.rst
 
 .PHONY: default
 default:

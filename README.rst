@@ -344,7 +344,7 @@ avoid accidentally making new changes that will be harder to merge.
 Changelog
 =========
 
-See CHANGES.txt
+See CHANGES.rst
 
 
 Licencing and source code
