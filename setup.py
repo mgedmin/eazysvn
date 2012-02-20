@@ -7,12 +7,12 @@ from eazysvn import ALIASES, VERSION
 readme = os.path.join(os.path.dirname(__file__), 'README.rst')
 changelog = os.path.join(os.path.dirname(__file__), 'CHANGES.rst')
 
-changes_in_last_version = file(changelog).read().split('\n\n\n')[1]
+changes_in_all_versions = file(changelog).read().split('\n\n\n', 1)[1]
 
 long_description = file(readme).read().replace('See CHANGES.rst',
-                                               changes_in_last_version)
+                                               changes_in_all_versions)
 
-first_changelog_line = changes_in_last_version.lstrip().split('\n', 1)[0]
+first_changelog_line = changes_in_all_versions.lstrip().split('\n', 1)[0]
 
 version_indicates_unreleased = VERSION.endswith('dev')
 changelog_indicates_unreleased = first_changelog_line.endswith('(unreleased)')
