@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.12.2 (unreleased)
+1.12.2 (2012-02-20)
 -------------------
 
 * New argument: ``ezmerge --accept=ARG``, passed directly to subversion.

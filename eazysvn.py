@@ -2,7 +2,7 @@
 # 
 # Make simple Subversion revision merges and branch switching much easier.
 #
-# Copyright (c) 2006--2010 Philipp von Weitershausen, Marius Gedminas
+# Copyright (c) 2006--2012 Philipp von Weitershausen, Marius Gedminas
 #
 # This program is distributed under the terms of the GNU General Public Licence
 # See the file COPYING for details.
@@ -21,7 +21,7 @@ import subprocess
 from xml.dom import minidom
 
 
-VERSION = '1.12.2dev'
+VERSION = '1.12.2'
 
 
 #
