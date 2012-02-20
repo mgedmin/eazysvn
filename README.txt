@@ -356,18 +356,18 @@ You can get the latest source code with
 
 .. parsed-literal::
 
-  svn co http://mg.pov.lt/eazysvn/svn eazysvn
+  git clone git://github.com/mgedmin/eazysvn.git
 
 Eazysvn began life as Philipp von Weitershausen's `ezmerge.py
 <http://codespeak.net/svn/user/philikon/ezmerge.py>`_.  Then Marius Gedminas
-took over, created a `home page <http://mg.pov.lt/eazysvn/svn>`_, and started
+took over, created a `home page <http://mg.pov.lt/eazysvn>`_, and started
 adding random features.
 
 
 Bugs
 ====
 
-Report bugs at https://bugs.launchpad.net/eazysvn.
+Report bugs at https://github.com/mgedmin/eazysvn/issues
 
 
 Wishlist/Todo
