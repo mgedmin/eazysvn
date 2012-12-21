@@ -591,12 +591,14 @@ def ezmerge(argv, progname=None):
     else:
         print msg
     log_cmd = "svn log -r %s:%s %s" % (beginrev + 1, endrev, branch)
+    sys.stdout.flush()
     os.system(log_cmd)
     if opts.diff:
         print
         print " ", merge_cmd
         print
     if not opts.dry_run:
+        sys.stdout.flush()
         os.system(merge_cmd)
 
 
@@ -638,6 +640,7 @@ def ezrevert(argv, progname=None):
     print " ", merge_cmd
     print
     log_cmd = "svn log -r %s:%s %s" % (beginrev + 1, endrev, path)
+    sys.stdout.flush()
     os.system(log_cmd)
     if not opts.dry_run:
         os.system(merge_cmd)
@@ -713,11 +716,13 @@ def ezswitch(argv, progname=None):
             cmd += " -m '%s'" % opts.message
         print cmd
         if not opts.dry_run:
+            sys.stdout.flush()
             os.system(cmd)
 
     cmd = "svn switch %s %s" % (branch, path)
     print cmd
     if not opts.dry_run:
+        sys.stdout.flush()
         os.system(cmd)
 
 
@@ -761,6 +766,7 @@ def eztag(argv, progname=None):
         cmd += " -m '%s'" % opts.message
     print cmd
     if not opts.dry_run:
+        sys.stdout.flush()
         os.system(cmd)
 
 
@@ -850,6 +856,7 @@ def rmbranch(argv, progname=None):
         cmd += " -m '%s'" % opts.message
     print cmd
     if not opts.dry_run:
+        sys.stdout.flush()
         os.system(cmd)
 
 
@@ -894,6 +901,7 @@ def mvbranch(argv, progname=None):
         cmd += " -m '%s'" % opts.message
     print cmd
     if not opts.dry_run:
+        sys.stdout.flush()
         os.system(cmd)
 
 
@@ -923,6 +931,7 @@ def branchdiff(argv, progname=None):
     beginrev, endrev = branchpoints(branch)
     diff_cmd = "svn diff -r %s:%s %s" % (beginrev, endrev, branch)
     print diff_cmd
+    sys.stdout.flush()
     os.system(diff_cmd)
 
 

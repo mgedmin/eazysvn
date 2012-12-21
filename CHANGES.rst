@@ -5,6 +5,10 @@ Changelog
 1.12.3 (unreleased)
 -------------------
 
+* Flush output buffers before executing external commands.  Previously
+  if you did, e.g. eazysvn branchdiff > DIFF, you would see the output of svn
+  diff above the svn diff command itself.
+
 
 1.12.2 (2012-02-20)
 -------------------
