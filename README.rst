@@ -11,13 +11,11 @@ Subversion branches.
 Installation
 ============
 
-Get it from the `Python Package Index <http://pypi.python.org/pypi/eazysvn>`_.
-If you have `easy_install <http://peak.telecommunity.com/DevCenter/EasyInstall>`_,
-you should be able to ::
+Get it from the `Python Package Index <http://pypi.python.org/pypi/eazysvn>`_::
 
-  easy_install eazysvn
+  pip install eazysvn
 
-You'll need Python 2.4 or later, as well as the Subversion command-line client.
+You'll need Python 2.6 or later, as well as the Subversion command-line client.
 
 
 Usage
