@@ -3,3 +3,4 @@ include COPYING
 include Makefile
 include .gitignore
 include tox.ini
+include .travis.yml

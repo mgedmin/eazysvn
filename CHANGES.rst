@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.13.0 (unreleased)
+1.13.0 (2015-01-13)
 -------------------
 
 * Flush output buffers before executing external commands.  Previously
