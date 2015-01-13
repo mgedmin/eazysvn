@@ -14,6 +14,8 @@
 # or ezmerge as a shortcut for eazysvn switch/merge.
 #
 
+from __future__ import print_function
+
 import os
 import sys
 import optparse
@@ -21,7 +23,7 @@ import subprocess
 from xml.dom import minidom
 
 
-VERSION = '1.12.3dev'
+VERSION = '1.13.0dev'
 
 
 #
@@ -76,10 +78,10 @@ def revs(rev):
     if '-' in rev:
         rev, endrev = rev.split('-')
         rev = int(rev) - 1
-        if not endrev == 'HEAD':
+        if endrev != 'HEAD':
             endrev = int(endrev)
-        if rev >= endrev:
-            raise ValueError('empty range (%s-%s)' % (rev + 1, endrev))
+            if rev >= endrev:
+                raise ValueError('empty range (%s-%s)' % (rev + 1, endrev))
     elif ':' in rev:
         rev, endrev = rev.split(':')
         rev = int(rev)
@@ -530,15 +532,15 @@ def ezmerge(argv, progname=None):
                 parser.error("too few arguments, try %s --help" % progname)
             elif len(args) > 3:
                 parser.error("too many arguments, try %s --help" % progname)
-    except optparse.OptParseError, e:
+    except optparse.OptParseError as e:
         sys.exit(e)
 
     if opts.list_branches:
         # TODO: allow a different wc-path
         if opts.tag:
-            print '\n'.join(listtags('.'))
+            print('\n'.join(listtags('.')))
         else:
-            print '\n'.join(listbranches('.'))
+            print('\n'.join(listbranches('.')))
         return
 
     if len(args) == 1:
@@ -587,19 +589,19 @@ def ezmerge(argv, progname=None):
         args += [branch, path]
         merge_cmd = " ".join(args)
     if not opts.diff:
-        print msg, "with"
-        print
-        print " ", merge_cmd
-        print
+        print(msg, "with")
+        print()
+        print(" ", merge_cmd)
+        print()
     else:
-        print msg
+        print(msg)
     log_cmd = "svn log -r %s:%s %s" % (beginrev + 1, endrev, branch)
     sys.stdout.flush()
     os.system(log_cmd)
     if opts.diff:
-        print
-        print " ", merge_cmd
-        print
+        print()
+        print(" ", merge_cmd)
+        print()
     if not opts.dry_run:
         sys.stdout.flush()
         os.system(merge_cmd)
@@ -621,7 +623,7 @@ def ezrevert(argv, progname=None):
             parser.error("too few arguments, try %s --help" % progname)
         elif len(args) > 2:
             parser.error("too many arguments, try %s --help" % progname)
-    except optparse.OptParseError, e:
+    except optparse.OptParseError as e:
         sys.exit(e)
 
     rev = args[0]
@@ -637,11 +639,11 @@ def ezrevert(argv, progname=None):
             what = "revisions %s" % rev
         else:
             what = "revision %s" % rev
-        print "Revert %s with" % what
-    print
+        print("Revert %s with" % what)
+    print()
     merge_cmd = "svn merge -r %s:%s %s" % (endrev, beginrev, path)
-    print " ", merge_cmd
-    print
+    print(" ", merge_cmd)
+    print()
     log_cmd = "svn log -r %s:%s %s" % (beginrev + 1, endrev, path)
     sys.stdout.flush()
     os.system(log_cmd)
@@ -681,7 +683,7 @@ def ezswitch(argv, progname=None):
         opts, args = parser.parse_args(argv[1:])
         if len(args) > 2:
             parser.error("too many arguments, try %s --help" % progname)
-    except optparse.OptParseError, e:
+    except optparse.OptParseError as e:
         sys.exit(e)
 
     path = '.'
@@ -689,13 +691,13 @@ def ezswitch(argv, progname=None):
     if opts.list_branches:
         # TODO: allow a different wc-path
         if opts.tag:
-            print '\n'.join(listtags(path))
+            print('\n'.join(listtags(path)))
         else:
-            print '\n'.join(listbranches(path))
+            print('\n'.join(listbranches(path)))
         return
 
     if not args:
-        print currentbranch(path)
+        print(currentbranch(path))
         return
 
     branch = args[0]
@@ -717,13 +719,13 @@ def ezswitch(argv, progname=None):
         cmd = "svn cp %s %s" % (cur_branch, branch)
         if opts.message:
             cmd += " -m '%s'" % opts.message
-        print cmd
+        print(cmd)
         if not opts.dry_run:
             sys.stdout.flush()
             os.system(cmd)
 
     cmd = "svn switch %s %s" % (branch, path)
-    print cmd
+    print(cmd)
     if not opts.dry_run:
         sys.stdout.flush()
         os.system(cmd)
@@ -749,7 +751,7 @@ def eztag(argv, progname=None):
         opts, args = parser.parse_args(argv[1:])
         if len(args) > 2:
             parser.error("too many arguments, try %s --help" % progname)
-    except optparse.OptParseError, e:
+    except optparse.OptParseError as e:
         sys.exit(e)
 
     # TODO: allow a different wc-path
@@ -757,7 +759,7 @@ def eztag(argv, progname=None):
 
     if opts.list_tags:
         # TODO: allow a different wc-path
-        print '\n'.join(listtags('.'))
+        print('\n'.join(listtags('.')))
         return
 
     if len(args) < 1:
@@ -767,7 +769,7 @@ def eztag(argv, progname=None):
     cmd = "svn cp %s %s" % (path, newtag)
     if opts.message:
         cmd += " -m '%s'" % opts.message
-    print cmd
+    print(cmd)
     if not opts.dry_run:
         sys.stdout.flush()
         os.system(cmd)
@@ -792,7 +794,7 @@ def ezbranch(argv, progname=None):
         opts, args = parser.parse_args(argv[1:])
         if len(args) > 2:
             parser.error("too many arguments, try %s --help" % progname)
-    except optparse.OptParseError, e:
+    except optparse.OptParseError as e:
         sys.exit(e)
 
     path = '.'
@@ -800,13 +802,13 @@ def ezbranch(argv, progname=None):
     if opts.list_branches:
         # TODO: allow a different wc-path
         if opts.tag:
-            print '\n'.join(listtags(path))
+            print('\n'.join(listtags(path)))
         else:
-            print '\n'.join(listbranches(path))
+            print('\n'.join(listbranches(path)))
         return
 
     if not args:
-        print currentbranch(path)
+        print(currentbranch(path))
         return
 
     branch = args[0]
@@ -816,7 +818,7 @@ def ezbranch(argv, progname=None):
     if len(args) > 1:
         path = args[1]
 
-    print determinebranch(branch, path)
+    print(determinebranch(branch, path))
 
 
 @command('rmbranch', 'remove branches')
@@ -840,14 +842,14 @@ def rmbranch(argv, progname=None):
         opts, args = parser.parse_args(argv[1:])
         if len(args) > 1:
             parser.error("too many arguments, try %s --help" % progname)
-    except optparse.OptParseError, e:
+    except optparse.OptParseError as e:
         sys.exit(e)
 
     path = '.'
 
     if opts.list_branches:
         # TODO: allow a different wc-path
-        print '\n'.join(listbranches(path))
+        print('\n'.join(listbranches(path)))
         return
 
     if len(args) < 1:
@@ -857,7 +859,7 @@ def rmbranch(argv, progname=None):
     cmd = "svn rm %s" % branch
     if opts.message:
         cmd += " -m '%s'" % opts.message
-    print cmd
+    print(cmd)
     if not opts.dry_run:
         sys.stdout.flush()
         os.system(cmd)
@@ -884,14 +886,14 @@ def mvbranch(argv, progname=None):
         opts, args = parser.parse_args(argv[1:])
         if len(args) > 2:
             parser.error("too many arguments, try %s --help" % progname)
-    except optparse.OptParseError, e:
+    except optparse.OptParseError as e:
         sys.exit(e)
 
     path = '.'
 
     if opts.list_branches:
         # TODO: allow a different wc-path
-        print '\n'.join(listbranches(path))
+        print('\n'.join(listbranches(path)))
         return
 
     if len(args) < 2:
@@ -902,7 +904,7 @@ def mvbranch(argv, progname=None):
     cmd = "svn mv %s %s" % (oldbranch, newbranch)
     if opts.message:
         cmd += " -m '%s'" % opts.message
-    print cmd
+    print(cmd)
     if not opts.dry_run:
         sys.stdout.flush()
         os.system(cmd)
@@ -922,7 +924,7 @@ def branchdiff(argv, progname=None):
     opts, args = parser.parse_args(argv[1:])
     path = '.'
     if opts.list_branches:
-        print '\n'.join(listbranches(path))
+        print('\n'.join(listbranches(path)))
         return
     if args:
         branch = args[0]
@@ -933,7 +935,7 @@ def branchdiff(argv, progname=None):
         branch = currentbranch(path)
     beginrev, endrev = branchpoints(branch)
     diff_cmd = "svn diff -r %s:%s %s" % (beginrev, endrev, branch)
-    print diff_cmd
+    print(diff_cmd)
     sys.stdout.flush()
     os.system(diff_cmd)
 
@@ -952,7 +954,7 @@ def branchpoint(argv, progname=None):
     opts, args = parser.parse_args(argv[1:])
     path = '.'
     if opts.list_branches:
-        print '\n'.join(listbranches(path))
+        print('\n'.join(listbranches(path)))
         return
     if args:
         branch = args[0]
@@ -962,7 +964,7 @@ def branchpoint(argv, progname=None):
     else:
         branch = currentbranch(path)
     beginrev, endrev = branchpoints(branch)
-    print beginrev
+    print(beginrev)
 
 
 @command('selftest', 'run self-tests')
@@ -970,22 +972,22 @@ def selftest(argv, progname=None):
     import doctest
     failures, tests = doctest.testmod()
     if not failures:
-        print "All %d tests passed." % tests
+        print("All %d tests passed." % tests)
 
 
 @command('help', 'this help message')
 def help(argv, progname=None):
     progname = os.path.basename(argv[0])
-    print "usage: %s command arguments" % progname
-    print "where command is one of"
+    print("usage: %s command arguments" % progname)
+    print("where command is one of")
     width = max(map(len, COMMANDS))
     for cmd, fn in sorted(COMMANDS.items()):
         if fn.alias:
             alias = ' (aka %s)' % fn.alias
         else:
             alias = ''
-        print "  %s -- %s%s" % (cmd.ljust(width), fn.help_msg, alias)
-    print "Use %s command --help for more information about commands" % progname
+        print("  %s -- %s%s" % (cmd.ljust(width), fn.help_msg, alias))
+    print("Use %s command --help for more information about commands" % progname)
 
 
 #
@@ -1006,7 +1008,7 @@ def eazysvn(argv):
 
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == '--version':
-        print "eazysvn version %s" % VERSION
+        print("eazysvn version %s" % VERSION)
         sys.exit(0)
     cmd = os.path.basename(sys.argv[0])
     if cmd.endswith('.py'):

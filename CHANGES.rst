@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.12.3 (unreleased)
+1.13.0 (unreleased)
 -------------------
 
 * Flush output buffers before executing external commands.  Previously
@@ -12,6 +12,8 @@ Changelog
 * Fix command alias handling on windows
   (https://github.com/mgedmin/eazysvn/pull/1)
   Patch by Timon Wong <timon86.wang@gmail.com>.
+
+* Support Python 3.
 
 
 1.12.2 (2012-02-20)
