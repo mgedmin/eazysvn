@@ -494,13 +494,23 @@ def command(cmd, help_msg, alias=None):
     return decorator
 
 
+def clean_progname(argv0):
+    """Return a clean program name."""
+    cmd = os.path.basename(argv0)
+    if cmd.endswith('-script.py'):
+        cmd = cmd[:-len('-script.py')]
+    elif cmd.endswith('.py'):
+        cmd = cmd[:-len('.py')]
+    return cmd
+
+
 #
 # Commands
 #
 
 @command('merge', 'merge branches', alias="ezmerge")
 def ezmerge(argv, progname=None):
-    progname = progname or os.path.basename(argv[0])
+    progname = progname or clean_progname(argv[0])
     parser = optparse.OptionParser(
         "usage: %prog [options] [rev] source-branch [wc-path]\n"
         "       %prog -l",
@@ -607,7 +617,7 @@ def ezmerge(argv, progname=None):
 
 @command('revert', 'revert checkins', alias="ezrevert")
 def ezrevert(argv, progname=None):
-    progname = progname or os.path.basename(argv[0])
+    progname = progname or clean_progname(argv[0])
     parser = optparse.OptionParser(
         "usage: %prog [options] rev [wc-path]",
         prog=progname,
@@ -651,7 +661,7 @@ def ezrevert(argv, progname=None):
 
 @command('switch', 'switch to a different branch', alias="ezswitch")
 def ezswitch(argv, progname=None):
-    progname = progname or os.path.basename(argv[0])
+    progname = progname or clean_progname(argv[0])
     parser = optparse.OptionParser(
         "usage: %prog [-n] [-c] [-m MSG] branch [wc-path]\n"
         "       %prog [-n] [-c] [-m MSG] -t tag [wc-path]\n"
@@ -731,7 +741,7 @@ def ezswitch(argv, progname=None):
 
 @command('tag', 'make tags')
 def eztag(argv, progname=None):
-    progname = progname or os.path.basename(argv[0])
+    progname = progname or clean_progname(argv[0])
     parser = optparse.OptionParser(
         "usage: %prog [-n] [-m MSG] newtagname",
         prog=progname,
@@ -775,7 +785,7 @@ def eztag(argv, progname=None):
 
 @command('branchurl', 'print full URL of a branch', alias="ezbranch")
 def ezbranch(argv, progname=None):
-    progname = progname or os.path.basename(argv[0])
+    progname = progname or clean_progname(argv[0])
     parser = optparse.OptionParser(
         "usage: %prog branch [wc-path]\n"
         "       %prog -l [-t]\n"
@@ -821,7 +831,7 @@ def ezbranch(argv, progname=None):
 
 @command('rmbranch', 'remove branches')
 def rmbranch(argv, progname=None):
-    progname = progname or os.path.basename(argv[0])
+    progname = progname or clean_progname(argv[0])
     parser = optparse.OptionParser(
         "usage: %prog [-n] [-m MSG] branch\n"
         "       %prog -l",
@@ -865,7 +875,7 @@ def rmbranch(argv, progname=None):
 
 @command('mvbranch', 'rename branches')
 def mvbranch(argv, progname=None):
-    progname = progname or os.path.basename(argv[0])
+    progname = progname or clean_progname(argv[0])
     parser = optparse.OptionParser(
         "usage: %prog [-n] [-m MSG] oldbranch newbranch\n"
         "       %prog -l",
@@ -910,7 +920,7 @@ def mvbranch(argv, progname=None):
 
 @command('branchdiff', 'show combined diff of all changes on a branch')
 def branchdiff(argv, progname=None):
-    progname = progname or os.path.basename(argv[0])
+    progname = progname or clean_progname(argv[0])
     parser = optparse.OptionParser(
         "usage: %prog [options] [branch [wc-path]]"
         "       %prog -l",
@@ -940,7 +950,7 @@ def branchdiff(argv, progname=None):
 
 @command('branchpoint', 'show the revision number when a branch was created')
 def branchpoint(argv, progname=None):
-    progname = progname or os.path.basename(argv[0])
+    progname = progname or clean_progname(argv[0])
     parser = optparse.OptionParser(
         "usage: %prog [options] [branch [wc-path]]"
         "       %prog -l",
@@ -975,7 +985,7 @@ def selftest(argv, progname=None):
 
 @command('help', 'this help message')
 def help(argv, progname=None):
-    progname = os.path.basename(argv[0])
+    progname = clean_progname(argv[0])
     print("usage: %s command arguments" % progname)
     print("where command is one of")
     width = max(map(len, COMMANDS))
@@ -993,7 +1003,7 @@ def help(argv, progname=None):
 #
 
 def eazysvn(argv):
-    progname = os.path.basename(argv[0])
+    progname = clean_progname(argv[0])
     if len(argv) < 2 or argv[1] in ('-h', '--help'):
         return help(argv)
     cmd = argv.pop(1)
@@ -1008,11 +1018,7 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1] == '--version':
         print("eazysvn version %s" % VERSION)
         sys.exit(0)
-    cmd = os.path.basename(sys.argv[0])
-    if cmd.endswith('-script.py'):
-        cmd = cmd[:-len('-script.py')]
-    elif cmd.endswith('.py'):
-        cmd = cmd[:-len('.py')]
+    cmd = clean_progname(sys.argv[0])
     func = ALIASES.get(cmd, eazysvn)
     sys.exit(func(sys.argv))
 
