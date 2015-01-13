@@ -479,6 +479,7 @@ def branchpoints(branch, svnlog=svnlog):
 COMMANDS = {}
 ALIASES = {}
 
+
 def command(cmd, help_msg, alias=None):
     """Register a command."""
     def decorator(fn):
@@ -501,10 +502,10 @@ def command(cmd, help_msg, alias=None):
 def ezmerge(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
-                "usage: %prog [options] [rev] source-branch [wc-path]\n"
-                "       %prog -l",
-                prog=progname,
-                description="merge changes from Subversion branches")
+        "usage: %prog [options] [rev] source-branch [wc-path]\n"
+        "       %prog -l",
+        prog=progname,
+        description="merge changes from Subversion branches")
     parser.add_option('-l', '--list',
                       help='list existing branches',
                       action='store_true', dest='list_branches', default=False)
@@ -608,9 +609,9 @@ def ezmerge(argv, progname=None):
 def ezrevert(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
-                "usage: %prog [options] rev [wc-path]",
-                prog=progname,
-                description="revert changes")
+        "usage: %prog [options] rev [wc-path]",
+        prog=progname,
+        description="revert changes")
     parser.add_option('-n', '--dry-run',
                       help='do not touch any files on disk or in subversion',
                       action='store_true', dest='dry_run', default=False)
@@ -652,15 +653,15 @@ def ezrevert(argv, progname=None):
 def ezswitch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
-                "usage: %prog [-n] [-c] [-m MSG] branch [wc-path]\n"
-                "       %prog [-n] [-c] [-m MSG] -t tag [wc-path]\n"
-                "       %prog -l [-t]\n"
-                "       %prog",
-                prog=progname,
-                description="Switch the working directory to a different"
-                            " Subversion branch.  When run without"
-                            " arguments, %prog will print the"
-                            " URL of the current branch.")
+        "usage: %prog [-n] [-c] [-m MSG] branch [wc-path]\n"
+        "       %prog [-n] [-c] [-m MSG] -t tag [wc-path]\n"
+        "       %prog -l [-t]\n"
+        "       %prog",
+        prog=progname,
+        description="Switch the working directory to a different"
+                    " Subversion branch.  When run without"
+                    " arguments, %prog will print the"
+                    " URL of the current branch.")
     parser.add_option('-l', '--list',
                       help='list existing branches',
                       action='store_true', dest='list_branches', default=False)
@@ -732,9 +733,9 @@ def ezswitch(argv, progname=None):
 def eztag(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
-                "usage: %prog [-n] [-m MSG] newtagname",
-                prog=progname,
-                description="Make a Subversion tag.")
+        "usage: %prog [-n] [-m MSG] newtagname",
+        prog=progname,
+        description="Make a Subversion tag.")
     parser.add_option('-m',
                       help='commit message',
                       action='store', dest='message', default=None)
@@ -776,11 +777,11 @@ def eztag(argv, progname=None):
 def ezbranch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
-                "usage: %prog branch [wc-path]\n"
-                "       %prog -l [-t]\n"
-                "       %prog",
-                prog=progname,
-                description="Print the URL of a named branch.")
+        "usage: %prog branch [wc-path]\n"
+        "       %prog -l [-t]\n"
+        "       %prog",
+        prog=progname,
+        description="Print the URL of a named branch.")
     parser.add_option('-l', '--list',
                       help='list existing branches',
                       action='store_true', dest='list_branches', default=False)
@@ -822,10 +823,10 @@ def ezbranch(argv, progname=None):
 def rmbranch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
-                "usage: %prog [-n] [-m MSG] branch\n"
-                "       %prog -l",
-                prog=progname,
-                description="Remove a named Subversion branch.")
+        "usage: %prog [-n] [-m MSG] branch\n"
+        "       %prog -l",
+        prog=progname,
+        description="Remove a named Subversion branch.")
     parser.add_option('-l', '--list',
                       help='list existing branches',
                       action='store_true', dest='list_branches', default=False)
@@ -866,10 +867,10 @@ def rmbranch(argv, progname=None):
 def mvbranch(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
-                "usage: %prog [-n] [-m MSG] oldbranch newbranch\n"
-                "       %prog -l",
-                prog=progname,
-                description="Rename a Subversion branch.")
+        "usage: %prog [-n] [-m MSG] oldbranch newbranch\n"
+        "       %prog -l",
+        prog=progname,
+        description="Rename a Subversion branch.")
     parser.add_option('-l', '--list',
                       help='list existing branches',
                       action='store_true', dest='list_branches', default=False)
@@ -911,10 +912,10 @@ def mvbranch(argv, progname=None):
 def branchdiff(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
-                "usage: %prog [options] [branch [wc-path]]"
-                "       %prog -l",
-                prog=progname,
-                description="show combined diff of all changes made on a branch")
+        "usage: %prog [options] [branch [wc-path]]"
+        "       %prog -l",
+        prog=progname,
+        description="show combined diff of all changes made on a branch")
     parser.add_option('-l', '--list',
                       help='list existing branches',
                       action='store_true', dest='list_branches', default=False)
@@ -941,10 +942,10 @@ def branchdiff(argv, progname=None):
 def branchpoint(argv, progname=None):
     progname = progname or os.path.basename(argv[0])
     parser = optparse.OptionParser(
-                "usage: %prog [options] [branch [wc-path]]"
-                "       %prog -l",
-                prog=progname,
-                description="show the revision number when a branch was created")
+        "usage: %prog [options] [branch [wc-path]]"
+        "       %prog -l",
+        prog=progname,
+        description="show the revision number when a branch was created")
     parser.add_option('-l', '--list',
                       help='list existing branches',
                       action='store_true', dest='list_branches', default=False)
