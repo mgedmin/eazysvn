@@ -488,8 +488,6 @@ def command(cmd, help_msg, alias=None):
         COMMANDS[cmd] = fn
         if alias:
             ALIASES[alias] = fn
-            if sys.platform == 'win32':
-                ALIASES[alias + '-script'] = fn
         fn.help_msg = help_msg
         fn.alias = alias
         return fn
@@ -1011,7 +1009,9 @@ def main():
         print("eazysvn version %s" % VERSION)
         sys.exit(0)
     cmd = os.path.basename(sys.argv[0])
-    if cmd.endswith('.py'):
+    if cmd.endswith('-script.py'):
+        cmd = cmd[:-len('-script.py')]
+    elif cmd.endswith('.py'):
         cmd = cmd[:-len('.py')]
     func = ALIASES.get(cmd, eazysvn)
     sys.exit(func(sys.argv))
