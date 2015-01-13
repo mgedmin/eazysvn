@@ -2,3 +2,4 @@ tmp/
 dist/
 eazysvn.egg-info/
 *.pyc
+.tox/
