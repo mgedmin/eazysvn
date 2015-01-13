@@ -1,16 +1,18 @@
 #!/usr/bin/env python
-import os, sys
-from setuptools import setup, find_packages
+import os
+import sys
+from setuptools import setup
 
 from eazysvn import ALIASES, VERSION
 
 readme = os.path.join(os.path.dirname(__file__), 'README.rst')
 changelog = os.path.join(os.path.dirname(__file__), 'CHANGES.rst')
 
-changes_in_all_versions = file(changelog).read().split('\n\n\n', 1)[1]
+with open(changelog) as f:
+    changes_in_all_versions = f.read().split('\n\n\n', 1)[1]
 
-long_description = file(readme).read().replace('See CHANGES.rst',
-                                               changes_in_all_versions)
+with open(readme) as f:
+    long_description = f.read().replace('See CHANGES.rst', changes_in_all_versions)
 
 first_changelog_line = changes_in_all_versions.lstrip().split('\n', 1)[0]
 
