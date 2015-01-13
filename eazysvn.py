@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# 
+#
 # Make simple Subversion revision merges and branch switching much easier.
 #
 # Copyright (c) 2006--2012 Philipp von Weitershausen, Marius Gedminas
@@ -146,7 +146,7 @@ def currentbranch(path, svninfo=svninfo):
 
       >>> currentbranch('.', svninfo=dummyinfo)
       'http://dev.worldcookery.com/svn/bla/branches/foobar/blergh'
- 
+
     """
     lines = svninfo(path).splitlines()
     if lines[1].startswith('URL: '):
@@ -195,7 +195,7 @@ def determinebranch(branch, path, svninfo=svninfo):
 
       >>> determinebranch('trunk', '.', svninfo=dummyinfo)
       'http://dev.worldcookery.com/svn/bla/trunk/blergh'
- 
+
     You can use tags too
 
       >>> def dummyinfo(path):
@@ -292,7 +292,7 @@ def determinetag(tagname, path, svninfo=svninfo):
 
       >>> determinetag('foobaz', '.', svninfo=dummyinfo)
       'http://dev.worldcookery.com/svn/bla/tags/foobaz/blergh'
- 
+
     """
     lines = svninfo(path).splitlines()
     if lines[1].startswith('URL: '):
@@ -353,7 +353,7 @@ def listbranches(path, svninfo=svninfo, svnls=svnls):
 
       >>> listbranches('.', svninfo=dummyinfo, svnls=dummyls)
       ['foo', 'bar', 'baz']
- 
+
     """
     url = currentbranch(path, svninfo=svninfo)
     chunks = url.split('/')
@@ -404,7 +404,7 @@ def listtags(path, svninfo=svninfo, svnls=svnls):
 
       >>> listtags('.', svninfo=dummyinfo, svnls=dummyls)
       ['foo', 'bar', 'baz']
- 
+
     """
     url = currentbranch(path, svninfo=svninfo)
     chunks = url.split('/')
@@ -438,9 +438,9 @@ def branchpoints(branch, svnlog=svnlog):
       ... <author>mg</author>
       ... <date>2007-01-11T16:30:07.775378Z</date>
       ... <msg>Blah blah.
-      ... 
+      ...
       ... Blah blah.
-      ... 
+      ...
       ... </msg>
       ... </logentry>
       ... <logentry
