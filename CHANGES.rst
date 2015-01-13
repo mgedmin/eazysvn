@@ -9,6 +9,10 @@ Changelog
   if you did, e.g. eazysvn branchdiff > DIFF, you would see the output of svn
   diff above the svn diff command itself.
 
+* Fix command alias handling on windows
+  (https://github.com/mgedmin/eazysvn/pull/1)
+  Patch by Timon Wong <timon86.wang@gmail.com>.
+
 
 1.12.2 (2012-02-20)
 -------------------
