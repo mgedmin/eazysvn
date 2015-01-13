@@ -20,9 +20,9 @@ version_in_version = VERSION.rstrip('dev')
 version_in_changelog = first_changelog_line.split()[0]
 
 if (version_in_version != version_in_changelog or
-    version_indicates_unreleased != changelog_indicates_unreleased):
-    print >> sys.stderr, "VERSION is %s, but last changelog entry is for %s" % (
-                            VERSION, first_changelog_line)
+        version_indicates_unreleased != changelog_indicates_unreleased):
+    sys.exit("VERSION is %s, but last changelog entry is for %s"
+             % (VERSION, first_changelog_line))
 
 setup(
     name='eazysvn',
