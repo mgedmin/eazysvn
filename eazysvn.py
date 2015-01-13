@@ -485,6 +485,8 @@ def command(cmd, help_msg, alias=None):
         COMMANDS[cmd] = fn
         if alias:
             ALIASES[alias] = fn
+            if sys.platform == 'win32':
+                ALIASES[alias + '-script'] = fn
         fn.help_msg = help_msg
         fn.alias = alias
         return fn
