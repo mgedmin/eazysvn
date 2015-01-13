@@ -16,9 +16,9 @@ with open(readme) as f:
 
 first_changelog_line = changes_in_all_versions.lstrip().split('\n', 1)[0]
 
-version_indicates_unreleased = VERSION.endswith('dev')
+version_indicates_unreleased = 'dev' in VERSION
 changelog_indicates_unreleased = first_changelog_line.endswith('(unreleased)')
-version_in_version = VERSION.rstrip('dev')
+version_in_version = VERSION.split('dev')[0].rstrip('.')
 version_in_changelog = first_changelog_line.split()[0]
 
 if (version_in_version != version_in_changelog or
