@@ -3,3 +3,4 @@ dist/
 eazysvn.egg-info/
 *.pyc
 .tox/
+.coverage

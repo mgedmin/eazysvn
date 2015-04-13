@@ -10,6 +10,11 @@ default:
 check test:
 	$(PYTHON) setup.py test
 
+.PHONY: coverage
+coverage:
+	coverage run --source=eazysvn setup.py -q test
+	coverage report
+
 .PHONY: dist
 dist:
 	$(PYTHON) setup.py sdist
