@@ -140,6 +140,7 @@ def currentbranch(path, svninfo=svninfo):
       >>> def dummyinfo(path):
       ...     return '''\
       ... Path: .
+      ... Working Copy Root Path: /home/mg/src/blugh
       ... URL: http://dev.worldcookery.com/svn/bla/branches/foobar/blergh
       ... Repository UUID: ab69c8a2-bfcb-0310-9bff-acb20127a769
       ... Revision: 1654
