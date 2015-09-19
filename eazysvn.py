@@ -487,7 +487,24 @@ def command(cmd, help_msg, alias=None):
 
 
 def clean_progname(argv0):
-    """Return a clean program name."""
+    """Return a clean program name.
+
+    It might be installed as a script
+
+        >>> clean_progname('eazysvn')
+        'eazysvn'
+
+    It might be run from a source checkout
+
+        >>> clean_progname('eazysvn.py')
+        'eazysvn'
+
+    Windows is special, as usual
+
+        >>> clean_progname('eazysvn-script.py')
+        'eazysvn'
+
+    """
     cmd = os.path.basename(argv0)
     if cmd.endswith('-script.py'):
         cmd = cmd[:-len('-script.py')]
