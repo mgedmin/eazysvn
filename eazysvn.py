@@ -227,11 +227,7 @@ def determinebranch(branch, path, svninfo=svninfo):
       'http://dev.worldcookery.com/svn/bla/branches/mybranch'
 
     """
-    lines = svninfo(path).splitlines()
-    if lines[1].startswith('URL: '):
-        url = lines[1][5:]
-    else:
-        url = lines[2][5:]
+    url = currentbranch(path, svninfo=svninfo)
 
     chunks = url.split('/')
     chunks.reverse()
@@ -296,11 +292,7 @@ def determinetag(tagname, path, svninfo=svninfo):
       'http://dev.worldcookery.com/svn/bla/tags/foobaz/blergh'
 
     """
-    lines = svninfo(path).splitlines()
-    if lines[1].startswith('URL: '):
-        url = lines[1][5:]
-    else:
-        url = lines[2][5:]
+    url = currentbranch(path, svninfo=svninfo)
 
     chunks = url.split('/')
     chunks.reverse()
