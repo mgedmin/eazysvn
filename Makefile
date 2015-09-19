@@ -12,7 +12,7 @@ check test:
 
 .PHONY: coverage
 coverage:
-	coverage run --source=eazysvn setup.py -q test
+	coverage run setup.py -q test
 	coverage report
 
 .PHONY: dist
