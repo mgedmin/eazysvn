@@ -8,7 +8,7 @@ default:
 
 .PHONY: check test
 check test:
-	$(PYTHON) setup.py test
+	$(PYTHON) setup.py -q test
 
 .PHONY: coverage
 coverage:
