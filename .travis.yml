@@ -11,6 +11,7 @@ python:
     - pypy3
 install:
     - pip install coverage coveralls
+    - if [ $TRAVIS_PYTHON_VERSION = 3.2 ]; then pip install 'coverage<4.0'; fi
 script:
     - coverage run --source=eazysvn setup.py test -q
 after_success:
