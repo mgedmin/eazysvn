@@ -109,9 +109,12 @@ def test_list_tags(command, svncheckout, capsys):
     assert out == '\n'
 
 
-def test_ezmerge_too_few_args(svncheckout, capsys):
+@pytest.mark.parametrize('command', [
+    'ezmerge', 'ezrevert', 'eztag', 'rmbranch', 'mvbranch',
+])
+def test_too_few_args(command, capsys):
     with pytest.raises(SystemExit):
-        es.ezmerge(['ezmerge'])
+        getattr(es, command)([command])
     out, err = capsys.readouterr()
     assert 'too few arguments' in err
 
@@ -139,6 +142,7 @@ def test_eazysvn_unknown_command():
     ('eazysvn mvbranch --help', 'Rename a Subversion branch'),
     ('eazysvn --version', 'eazysvn version'),
     ('ezswitch --version', 'eazysvn version'),
+    ('eazysvn --help', 'usage: eazysvn command arguments'),
 ])
 def test_main(capsys, command, expected):
     with mock.patch('sys.argv', command.split()):
