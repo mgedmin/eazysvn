@@ -2,9 +2,13 @@ import os
 import shutil
 import subprocess
 import tempfile
-import urllib
 from collections import namedtuple
 from contextlib import contextmanager
+
+try:
+    from urllib.request import pathname2url     # Python 3
+except:
+    from urllib import pathname2url             # Python 2
 
 import mock
 import pytest
@@ -39,7 +43,7 @@ def svnrepo(name='repo'):
     with tempdir() as dirname:
         path = os.path.join(dirname, name)
         subprocess.call(['svnadmin', 'create', path])
-        url = 'file://' + urllib.pathname2url(os.path.abspath(path))
+        url = 'file://' + pathname2url(os.path.abspath(path))
         yield SVNRepo(path=path, url=url)
 
 

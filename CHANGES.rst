@@ -7,6 +7,8 @@ Changelog
 
 * Drop Python 2.6 and 3.2 support.
 
+* Actually support Python 3.
+
 
 1.13.0 (2015-01-13)
 -------------------

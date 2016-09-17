@@ -93,29 +93,34 @@ def revs(rev):
     return rev, endrev
 
 
+def pipe(*command, **kwargs):
+    p = subprocess.Popen(command, stdout=subprocess.PIPE, **kwargs)
+    stdout = p.communicate()[0]
+    if not isinstance(stdout, str):
+        stdout = stdout.decode('UTF-8', 'replace')
+    return stdout
+
+
 def svninfo(path):
     """
     Return svn information about ``path``.
     """
-    p = subprocess.Popen(['svn', 'info', path], stdout=subprocess.PIPE)
-    return p.communicate()[0]
+    return pipe('svn', 'info', path)
 
 
 def svnls(url):
     """
     Return a list of files under ``url``.
     """
-    p = subprocess.Popen(['svn', 'ls', url], stdout=subprocess.PIPE)
-    return p.communicate()[0]
+    return pipe('svn', 'ls', url)
 
 
 def svnlog(url):
     """
     Return svn log of ``url``, stopping on branchpoints, in XML.
     """
-    p = subprocess.Popen(['svn', 'log', '--non-interactive', '--stop-on-copy',
-                          '--xml', url], stdout=subprocess.PIPE)
-    return p.communicate()[0]
+    return pipe('svn', 'log', '--non-interactive', '--stop-on-copy',
+                '--xml', url)
 
 
 def currentbranch(path, svninfo=svninfo):
