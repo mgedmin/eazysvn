@@ -23,7 +23,7 @@ import subprocess
 from xml.dom import minidom
 
 
-VERSION = '1.14.0.dev0'
+VERSION = '1.14.0'
 
 
 #

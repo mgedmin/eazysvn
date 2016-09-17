@@ -8,3 +8,6 @@ include tox.ini
 
 # added by check_manifest.py
 include *.yml
+
+# added by check_manifest.py
+include *.py

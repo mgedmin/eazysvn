@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.14.0 (unreleased)
+1.14.0 (2016-09-17)
 -------------------
 
 * Drop Python 2.6 and 3.2 support.
