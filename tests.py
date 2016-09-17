@@ -60,7 +60,10 @@ def svnrepo(name='repo'):
     with tempdir() as dirname:
         path = os.path.join(dirname, name)
         subprocess.call(['svnadmin', 'create', path])
-        url = 'file://' + pathname2url(os.path.abspath(path))
+        url = pathname2url(os.path.abspath(path))
+        if not url.startswith('///'):  # linux vs windows
+            url = '//' + url
+        url = 'file:' + url
         yield SVNRepo(path=path, url=url)
 
 
