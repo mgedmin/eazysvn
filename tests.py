@@ -109,6 +109,18 @@ def test_list_tags(command, svncheckout, capsys):
     assert out == '\n'
 
 
+def test_eztag_list(svncheckout, capsys):
+    es.eztag(['eztag', '-l'])
+    out, err = capsys.readouterr()
+    assert out == '\n'
+
+
+def test_ezswitch_current_branch(svncheckout, capsys):
+    es.ezswitch(['ezswitch'])
+    out, err = capsys.readouterr()
+    assert out.endswith('/repo\n')
+
+
 @pytest.mark.parametrize('command', [
     'ezmerge', 'ezrevert', 'eztag', 'rmbranch', 'mvbranch',
 ])
