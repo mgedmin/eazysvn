@@ -5,3 +5,6 @@ include .travis.yml
 include COPYING
 include Makefile
 include tox.ini
+
+# added by check_manifest.py
+include *.yml

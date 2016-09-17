@@ -1,7 +1,6 @@
 sudo: false
 language: python
 python:
-    - 2.6
     - 2.7
     - 3.3
     - 3.4
@@ -9,9 +8,9 @@ python:
     - pypy
     - pypy3
 install:
-    - pip install coverage coveralls
+    - pip install coverage coveralls pytest
 script:
-    - coverage run --source=eazysvn setup.py test -q
+    - coverage run -m pytest eazysvn.py tests.py
 after_success:
     - coveralls
 notifications:

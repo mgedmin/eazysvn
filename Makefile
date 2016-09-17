@@ -8,12 +8,12 @@ default:
 
 .PHONY: check test
 check test:
-	$(PYTHON) setup.py -q test
+	py.test eazysvn.py tests.py
 
 .PHONY: coverage
 coverage:
-	coverage run setup.py -q test
-	coverage report
+	coverage run -m pytest eazysvn.py tests.py
+	coverage report -m
 
 .PHONY: dist
 dist:

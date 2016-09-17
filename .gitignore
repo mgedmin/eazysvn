@@ -4,3 +4,4 @@ eazysvn.egg-info/
 *.pyc
 .tox/
 .coverage
+.cache/
