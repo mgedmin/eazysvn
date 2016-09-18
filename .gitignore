@@ -5,3 +5,4 @@ eazysvn.egg-info/
 .tox/
 .coverage
 .cache/
+build/
