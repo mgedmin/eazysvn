@@ -94,6 +94,18 @@ def test_svnlog(svncheckout):
     assert stdout.startswith('<?xml')
 
 
+def make_svninfo(url):
+    def _svninfo(path):
+        return textwrap.dedent('''\
+            Path: .
+            URL: %s
+            Repository UUID: ab69c8a2-bfcb-0310-9bff-acb20127a769
+            Revision: 1654
+            Node Kind: directory
+        ''') % url
+    return _svninfo
+
+
 @pytest.mark.parametrize(['expected', 'svninfo_stdout'], [
     ('http://dev.worldcookery.com/svn/bla/trunk/blergh',
      textwrap.dedent('''\
@@ -116,6 +128,28 @@ def test_svnlog(svncheckout):
 def test_currentbranch(expected, svninfo_stdout):
     url = es.currentbranch('.', svninfo=lambda path: svninfo_stdout)
     assert url == expected
+
+
+@pytest.mark.parametrize(['current_url', 'new_branch', 'expected_url'], [
+    ('http://dev.worldcookery.com/svn/bla/trunk/blergh',
+     'foobar',
+     'http://dev.worldcookery.com/svn/bla/branches/foobar/blergh'),
+    ('http://dev.worldcookery.com/svn/bla/trunk/blergh',
+     'trunk',
+     'http://dev.worldcookery.com/svn/bla/trunk/blergh'),
+    ('http://dev.worldcookery.com/svn/bla/branches/foobar/blergh',
+     'trunk',
+     'http://dev.worldcookery.com/svn/bla/trunk/blergh'),
+    ('http://dev.worldcookery.com/svn/bla/branches/foobar/blergh',
+     'tag/3.4',
+     'http://dev.worldcookery.com/svn/bla/tag/3.4/blergh'),
+    ('http://dev.worldcookery.com/svn/bla/tags/foobar',
+     'mybranch',
+     'http://dev.worldcookery.com/svn/bla/branches/mybranch'),
+])
+def test_determinebranch(current_url, new_branch, expected_url):
+    url = es.determinebranch(new_branch, svninfo=make_svninfo(current_url))
+    assert url == expected_url
 
 
 @pytest.mark.parametrize('command', [

@@ -153,8 +153,9 @@ def currentbranch(path, svninfo=svninfo):
     return url
 
 
-def determinebranch(branch, path, svninfo=svninfo):
-    """
+def determinebranch(branch, path='.', svninfo=svninfo):
+    """Compute the SVN URL for a different branch of a given checkout path.
+
     Let's set up a dummy 'svn info' command handler:
 
       >>> def dummyinfo(path):
@@ -166,9 +167,9 @@ def determinebranch(branch, path, svninfo=svninfo):
       ... Node Kind: directory
       ... '''
 
-    ``determinebranch()`` takes the svn path of the current working
-    directory path and mangles in either trunk or a branch repository
-    path.  Here's an example for turning 'trunk' into 'branches':
+    ``determinebranch()`` takes the Subversion URL of the specified
+    working directory path and mangles it to point to the desired
+    branch.  Here's an example for turning 'trunk' into 'branches':
 
       >>> determinebranch('foobar', '.', svninfo=dummyinfo)
       'http://dev.worldcookery.com/svn/bla/branches/foobar/blergh'
@@ -179,47 +180,10 @@ def determinebranch(branch, path, svninfo=svninfo):
       >>> determinebranch('trunk', '.', svninfo=dummyinfo)
       'http://dev.worldcookery.com/svn/bla/trunk/blergh'
 
-    Here's the whole thing the other way around:
-
-      >>> def dummyinfo(path):
-      ...     return '''\
-      ... Path: .
-      ... URL: http://dev.worldcookery.com/svn/bla/branches/foobar/blergh
-      ... Repository UUID: ab69c8a2-bfcb-0310-9bff-acb20127a769
-      ... Revision: 1654
-      ... Node Kind: directory
-      ... '''
-
-      >>> determinebranch('trunk', '.', svninfo=dummyinfo)
-      'http://dev.worldcookery.com/svn/bla/trunk/blergh'
-
     You can use tags too
-
-      >>> def dummyinfo(path):
-      ...     return '''\
-      ... Path: .
-      ... URL: http://dev.worldcookery.com/svn/bla/branches/foobar/blergh
-      ... Repository UUID: ab69c8a2-bfcb-0310-9bff-acb20127a769
-      ... Revision: 1654
-      ... Node Kind: directory
-      ... '''
 
       >>> determinebranch('tag/3.4', '.', svninfo=dummyinfo)
       'http://dev.worldcookery.com/svn/bla/tag/3.4/blergh'
-
-      Switching from a tag to a branch:
-
-      >>> def dummyinfo(path):
-      ...     return '''\
-      ... Path: .
-      ... URL: http://dev.worldcookery.com/svn/bla/tags/foobar
-      ... Repository UUID: ab69c8a2-bfcb-0310-9bff-acb20127a769
-      ... Revision: 1654
-      ... Node Kind: directory
-      ... '''
-
-      >>> determinebranch('mybranch', '.', svninfo=dummyinfo)
-      'http://dev.worldcookery.com/svn/bla/branches/mybranch'
 
     """
     url = currentbranch(path, svninfo=svninfo)
