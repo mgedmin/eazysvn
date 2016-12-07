@@ -2,6 +2,7 @@ import os
 import shutil
 import subprocess
 import tempfile
+import textwrap
 from collections import namedtuple
 from contextlib import contextmanager
 
@@ -91,6 +92,30 @@ def test_svnls(svncheckout):
 def test_svnlog(svncheckout):
     stdout = es.svnlog('.')
     assert stdout.startswith('<?xml')
+
+
+@pytest.mark.parametrize(['expected', 'svninfo_stdout'], [
+    ('http://dev.worldcookery.com/svn/bla/trunk/blergh',
+     textwrap.dedent('''\
+      Path: .
+      URL: http://dev.worldcookery.com/svn/bla/trunk/blergh
+      Repository UUID: ab69c8a2-bfcb-0310-9bff-acb20127a769
+      Revision: 1654
+      Node Kind: directory
+      ''')),
+    ('http://dev.worldcookery.com/svn/bla/branches/foobar/blergh',
+     textwrap.dedent('''\
+      Path: .
+      Working Copy Root Path: /home/mg/src/blugh
+      URL: http://dev.worldcookery.com/svn/bla/branches/foobar/blergh
+      Repository UUID: ab69c8a2-bfcb-0310-9bff-acb20127a769
+      Revision: 1654
+      Node Kind: directory
+      ''')),
+])
+def test_currentbranch(expected, svninfo_stdout):
+    url = es.currentbranch('.', svninfo=lambda path: svninfo_stdout)
+    assert url == expected
 
 
 @pytest.mark.parametrize('command', [

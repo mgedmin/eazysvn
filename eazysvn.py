@@ -124,7 +124,8 @@ def svnlog(url):
 
 
 def currentbranch(path, svninfo=svninfo):
-    """
+    """Return the SVN URL of a given checkout path.
+
     Let's set up a dummy 'svn info' command handler:
 
       >>> def dummyinfo(path):
@@ -142,21 +143,9 @@ def currentbranch(path, svninfo=svninfo):
       >>> currentbranch('.', svninfo=dummyinfo)
       'http://dev.worldcookery.com/svn/bla/trunk/blergh'
 
-      >>> def dummyinfo(path):
-      ...     return '''\
-      ... Path: .
-      ... Working Copy Root Path: /home/mg/src/blugh
-      ... URL: http://dev.worldcookery.com/svn/bla/branches/foobar/blergh
-      ... Repository UUID: ab69c8a2-bfcb-0310-9bff-acb20127a769
-      ... Revision: 1654
-      ... Node Kind: directory
-      ... '''
-
-      >>> currentbranch('.', svninfo=dummyinfo)
-      'http://dev.worldcookery.com/svn/bla/branches/foobar/blergh'
-
     """
     lines = svninfo(path).splitlines()
+    # Different svn versions put the URL on different lines.
     if lines[1].startswith('URL: '):
         url = lines[1][5:]
     else:
