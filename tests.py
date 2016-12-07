@@ -155,6 +155,19 @@ def test_determinebranch(current_url, new_branch, expected_url):
     assert url == expected_url
 
 
+@pytest.mark.parametrize(['current_url', 'new_tag', 'expected_url'], [
+    ('http://dev.worldcookery.com/svn/bla/trunk/blergh',
+     'foobar',
+     'http://dev.worldcookery.com/svn/bla/tags/foobar/blergh'),
+    ('http://dev.worldcookery.com/svn/bla/branches/foobar/blergh',
+     'foobaz',
+     'http://dev.worldcookery.com/svn/bla/tags/foobaz/blergh'),
+])
+def test_determinetag(current_url, new_tag, expected_url):
+    url = es.determinetag(new_tag, svninfo=make_svninfo(current_url))
+    assert url == expected_url
+
+
 @pytest.mark.parametrize('command', [
     'ezmerge', 'ezswitch', 'ezbranch', 'rmbranch', 'mvbranch',
     'branchdiff', 'branchpoint',

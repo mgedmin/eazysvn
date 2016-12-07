@@ -216,8 +216,9 @@ def determinebranch(branch, path='.', svninfo=svninfo):
     return '/'.join(new_chunks)
 
 
-def determinetag(tagname, path, svninfo=svninfo):
-    """
+def determinetag(tagname, path='.', svninfo=svninfo):
+    """Compute the SVN URL for a different tag of a given checkout path.
+
     Let's set up a dummy 'svn info' command handler:
 
       >>> def dummyinfo(path):
@@ -229,26 +230,12 @@ def determinetag(tagname, path, svninfo=svninfo):
       ... Node Kind: directory
       ... '''
 
-    ``determinetag()`` takes the svn path of the current working
-    directory path and mangles it to point to a named tag.
-    Here's an example:
+    ``determinetag()`` takes the Subversion URL of the specified
+    working directory path and mangles it to point to the desired
+    tag.  Here's an example:
 
       >>> determinetag('foobar', '.', svninfo=dummyinfo)
       'http://dev.worldcookery.com/svn/bla/tags/foobar/blergh'
-
-    We can do the same with branches
-
-      >>> def dummyinfo(path):
-      ...     return '''\
-      ... Path: .
-      ... URL: http://dev.worldcookery.com/svn/bla/branches/foobar/blergh
-      ... Repository UUID: ab69c8a2-bfcb-0310-9bff-acb20127a769
-      ... Revision: 1654
-      ... Node Kind: directory
-      ... '''
-
-      >>> determinetag('foobaz', '.', svninfo=dummyinfo)
-      'http://dev.worldcookery.com/svn/bla/tags/foobaz/blergh'
 
     """
     url = currentbranch(path, svninfo=svninfo)
