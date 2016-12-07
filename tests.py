@@ -162,6 +162,9 @@ def test_determinebranch(current_url, new_branch, expected_url):
     ('http://dev.worldcookery.com/svn/bla/branches/foobar/blergh',
      'foobaz',
      'http://dev.worldcookery.com/svn/bla/tags/foobaz/blergh'),
+    ('http://dev.worldcookery.com/svn/bla/branch/foobar/blergh',
+     'foobaz',
+     'http://dev.worldcookery.com/svn/bla/tag/foobaz/blergh'),
 ])
 def test_determinetag(current_url, new_tag, expected_url):
     url = es.determinetag(new_tag, svninfo=make_svninfo(current_url))
