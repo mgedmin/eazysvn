@@ -31,8 +31,10 @@ VERSION = '1.14.1.dev0'
 #
 
 def revs(rev):
-    """
-    Make sense out of convenient way of mentioning revisions
+    """Normalize revision range.
+
+    Takes a revision string representing one revision or a range of them
+    and returns a pair (startrev, endrev).
 
     For example, the revision 43 starts at r42 and ends at r43:
 
