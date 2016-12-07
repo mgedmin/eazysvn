@@ -12,7 +12,8 @@ check test:
 
 .PHONY: coverage
 coverage:
-	coverage run -m pytest eazysvn.py tests.py
+	tox -e coverage,coverage3 -- -p
+	coverage combine
 	coverage report -m
 
 .PHONY: dist
