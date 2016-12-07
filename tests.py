@@ -146,6 +146,9 @@ def test_currentbranch(expected, svninfo_stdout):
     ('http://dev.worldcookery.com/svn/bla/tags/foobar',
      'mybranch',
      'http://dev.worldcookery.com/svn/bla/branches/mybranch'),
+    ('http://dev.worldcookery.com/svn/bla/branches/foobar',
+     'mybranch',
+     'http://dev.worldcookery.com/svn/bla/branches/mybranch'),
 ])
 def test_determinebranch(current_url, new_branch, expected_url):
     url = es.determinebranch(new_branch, svninfo=make_svninfo(current_url))
