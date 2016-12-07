@@ -737,7 +737,8 @@ def ezswitch(argv, progname=None):
             # XXX determinebranch() should raise this kind of error
             # instead of me doing it here
             sys.exit("can't figure out the branch structure of %s\n"
-                     "expected a path element named trunk/branches/tags/branch/tag"
+                     "expected a path element named"
+                     " trunk/branches/tags/branch/tag"
                      % branch)
         cmd = "svn cp %s %s" % (cur_branch, branch)
         if opts.message:
@@ -1010,7 +1011,8 @@ def help(argv, progname=None):
         else:
             alias = ''
         print("  %s -- %s%s" % (cmd.ljust(width), fn.help_msg, alias))
-    print("Use %s command --help for more information about commands" % progname)
+    print("Use %s command --help for more information about commands"
+          % progname)
 
 
 #
@@ -1038,7 +1040,7 @@ def main():
     sys.exit(func(sys.argv))
 
 
-def additional_tests(): # for setup.py test
+def additional_tests():  # for setup.py test
     import doctest
     return doctest.DocTestSuite()
 
