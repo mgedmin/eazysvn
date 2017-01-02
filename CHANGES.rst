@@ -5,7 +5,7 @@ Changelog
 1.14.1 (unreleased)
 -------------------
 
-* No changes yet.
+* Add support for Python 3.6.
 
 
 1.14.0 (2016-09-17)
