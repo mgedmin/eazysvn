@@ -405,7 +405,7 @@ def branchpoints(branch, svnlog=svnlog):
     xml = svnlog(branch)
     try:
         dom = minidom.parseString(xml)
-    except:
+    except Exception:
         sys.exit("Could not parse svn log output:\n\n" + xml)
     newest_entry = dom.getElementsByTagName('logentry')[0]
     oldest_entry = dom.getElementsByTagName('logentry')[-1]

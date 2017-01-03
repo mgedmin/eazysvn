@@ -213,6 +213,14 @@ def test_listtags(current_url, expected_url):
     assert branches == ["a", "b"]
 
 
+def test_branchpoints_error_handling():
+    def svnlog(url):
+        return 'hahaha this is not xml'
+    branch_url = 'http://dev.worldcookery.com/svn/bla/branches/foo'
+    with pytest.raises(SystemExit):
+        es.branchpoints(branch_url, svnlog=svnlog)
+
+
 @pytest.mark.parametrize('command', [
     'ezmerge', 'ezswitch', 'ezbranch', 'rmbranch', 'mvbranch',
     'branchdiff', 'branchpoint',
