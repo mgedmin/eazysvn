@@ -262,6 +262,22 @@ def test_too_few_args(command, capsys):
     assert 'too few arguments' in err
 
 
+@pytest.mark.parametrize(['command', 'nargs'], [
+    ('ezmerge', 4),
+    ('ezrevert', 3),
+    ('ezswitch', 3),
+    ('eztag', 3),
+    ('ezbranch', 3),
+    ('rmbranch', 2),
+    ('mvbranch', 3),
+])
+def test_too_many_args(command, nargs, capsys):
+    with pytest.raises(SystemExit):
+        getattr(es, command)([command] + ['FOO'] * nargs)
+    out, err = capsys.readouterr()
+    assert 'too many arguments' in err
+
+
 def test_eazysvn_selftest(capsys):
     es.selftest(['eazysvn', 'selftest'])
     out, err = capsys.readouterr()
