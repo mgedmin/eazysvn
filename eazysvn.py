@@ -490,15 +490,12 @@ def ezmerge(argv, progname=None):
     parser.add_option('-n', '--dry-run',
                       help='do not touch any files on disk or in subversion',
                       action='store_true', dest='dry_run', default=False)
-    try:
-        opts, args = parser.parse_args(argv[1:])
-        if not opts.list_branches:
-            if len(args) < 1:
-                parser.error("too few arguments, try %s --help" % progname)
-            elif len(args) > 3:
-                parser.error("too many arguments, try %s --help" % progname)
-    except optparse.OptParseError as e:
-        sys.exit(e)
+    opts, args = parser.parse_args(argv[1:])
+    if not opts.list_branches:
+        if len(args) < 1:
+            parser.error("too few arguments, try %s --help" % progname)
+        elif len(args) > 3:
+            parser.error("too many arguments, try %s --help" % progname)
 
     if opts.list_branches:
         # TODO: allow a different wc-path
@@ -582,14 +579,11 @@ def ezrevert(argv, progname=None):
     parser.add_option('-n', '--dry-run',
                       help='do not touch any files on disk or in subversion',
                       action='store_true', dest='dry_run', default=False)
-    try:
-        opts, args = parser.parse_args(argv[1:])
-        if len(args) < 1:
-            parser.error("too few arguments, try %s --help" % progname)
-        elif len(args) > 2:
-            parser.error("too many arguments, try %s --help" % progname)
-    except optparse.OptParseError as e:
-        sys.exit(e)
+    opts, args = parser.parse_args(argv[1:])
+    if len(args) < 1:
+        parser.error("too few arguments, try %s --help" % progname)
+    elif len(args) > 2:
+        parser.error("too many arguments, try %s --help" % progname)
 
     rev = args[0]
     path = '.'
@@ -644,12 +638,9 @@ def ezswitch(argv, progname=None):
     parser.add_option('-n', '--dry-run',
                       help='do not touch any files on disk or in subversion',
                       action='store_true', dest='dry_run', default=False)
-    try:
-        opts, args = parser.parse_args(argv[1:])
-        if len(args) > 2:
-            parser.error("too many arguments, try %s --help" % progname)
-    except optparse.OptParseError as e:
-        sys.exit(e)
+    opts, args = parser.parse_args(argv[1:])
+    if len(args) > 2:
+        parser.error("too many arguments, try %s --help" % progname)
 
     path = '.'
 
@@ -713,12 +704,9 @@ def eztag(argv, progname=None):
     parser.add_option('-l', '--list',
                       help='list existing tags',
                       action='store_true', dest='list_tags', default=False)
-    try:
-        opts, args = parser.parse_args(argv[1:])
-        if len(args) > 2:
-            parser.error("too many arguments, try %s --help" % progname)
-    except optparse.OptParseError as e:
-        sys.exit(e)
+    opts, args = parser.parse_args(argv[1:])
+    if len(args) > 2:
+        parser.error("too many arguments, try %s --help" % progname)
 
     # TODO: allow a different wc-path
     path = '.'
@@ -756,12 +744,9 @@ def ezbranch(argv, progname=None):
     parser.add_option('-t', '--tag',
                       help='look for a tag instead of a branch',
                       action='store_true', dest='tag', default=False)
-    try:
-        opts, args = parser.parse_args(argv[1:])
-        if len(args) > 2:
-            parser.error("too many arguments, try %s --help" % progname)
-    except optparse.OptParseError as e:
-        sys.exit(e)
+    opts, args = parser.parse_args(argv[1:])
+    if len(args) > 2:
+        parser.error("too many arguments, try %s --help" % progname)
 
     path = '.'
 
@@ -804,12 +789,9 @@ def rmbranch(argv, progname=None):
     parser.add_option('-n', '--dry-run',
                       help='do not remove the branch, just print the command',
                       action='store_true', dest='dry_run', default=False)
-    try:
-        opts, args = parser.parse_args(argv[1:])
-        if len(args) > 1:
-            parser.error("too many arguments, try %s --help" % progname)
-    except optparse.OptParseError as e:
-        sys.exit(e)
+    opts, args = parser.parse_args(argv[1:])
+    if len(args) > 1:
+        parser.error("too many arguments, try %s --help" % progname)
 
     path = '.'
 
@@ -848,12 +830,9 @@ def mvbranch(argv, progname=None):
     parser.add_option('-n', '--dry-run',
                       help='do not rename the branch, just print the command',
                       action='store_true', dest='dry_run', default=False)
-    try:
-        opts, args = parser.parse_args(argv[1:])
-        if len(args) > 2:
-            parser.error("too many arguments, try %s --help" % progname)
-    except optparse.OptParseError as e:
-        sys.exit(e)
+    opts, args = parser.parse_args(argv[1:])
+    if len(args) > 2:
+        parser.error("too many arguments, try %s --help" % progname)
 
     path = '.'
 
