@@ -366,5 +366,37 @@ def test_ezmerge_diff():
     ]
 
 
+def test_ezrevert():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('os.system') as mock_system:
+        es.ezrevert(['ezrevert', '5543'])
+    assert mock_system.mock_calls == [
+        mock.call('svn log -r 5543:5543 .'),
+        mock.call('svn merge -r 5543:5542 .'),
+    ]
+
+
+def test_ezrevert_dry_run():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('os.system') as mock_system:
+        es.ezrevert(['ezrevert', '-n', '5543'])
+    assert mock_system.mock_calls == [
+        mock.call('svn log -r 5543:5543 .'),
+    ]
+
+
+def test_ezrevert_range():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('os.system') as mock_system:
+        es.ezrevert(['ezrevert', '5512-5534'])
+    assert mock_system.mock_calls == [
+        mock.call('svn log -r 5512:5534 .'),
+        mock.call('svn merge -r 5534:5511 .'),
+    ]
+
+
 def test_additional_tests():
     assert es.additional_tests().countTestCases() > 0
