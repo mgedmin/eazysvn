@@ -125,7 +125,7 @@ def svnlog(url):
                 '--xml', url)
 
 
-def currentbranch(path, svninfo=svninfo):
+def currentbranch(path, _svninfo=None):
     """Return the SVN URL of a given checkout path.
 
     Let's set up a dummy 'svn info' command handler:
@@ -142,11 +142,13 @@ def currentbranch(path, svninfo=svninfo):
     ``currentbranch()`` takes the svn path of the current working
     directory path returns it.
 
-      >>> currentbranch('.', svninfo=dummyinfo)
+      >>> currentbranch('.', _svninfo=dummyinfo)
       'http://dev.worldcookery.com/svn/bla/trunk/blergh'
 
     """
-    lines = svninfo(path).splitlines()
+    if _svninfo is None:
+        _svninfo = svninfo
+    lines = _svninfo(path).splitlines()
     # Different svn versions put the URL on different lines.
     if lines[1].startswith('URL: '):
         url = lines[1][5:]
@@ -155,7 +157,7 @@ def currentbranch(path, svninfo=svninfo):
     return url
 
 
-def determinebranch(branch, path='.', svninfo=svninfo):
+def determinebranch(branch, path='.', _svninfo=None):
     """Compute the SVN URL for a different branch of a given checkout path.
 
     Let's set up a dummy 'svn info' command handler:
@@ -173,22 +175,22 @@ def determinebranch(branch, path='.', svninfo=svninfo):
     working directory path and mangles it to point to the desired
     branch.  Here's an example for turning 'trunk' into 'branches':
 
-      >>> determinebranch('foobar', '.', svninfo=dummyinfo)
+      >>> determinebranch('foobar', '.', _svninfo=dummyinfo)
       'http://dev.worldcookery.com/svn/bla/branches/foobar/blergh'
 
     Of course, if the current working copy is a trunk and we specify
     trunk, it keeps the trunk:
 
-      >>> determinebranch('trunk', '.', svninfo=dummyinfo)
+      >>> determinebranch('trunk', '.', _svninfo=dummyinfo)
       'http://dev.worldcookery.com/svn/bla/trunk/blergh'
 
     You can use tags too
 
-      >>> determinebranch('tag/3.4', '.', svninfo=dummyinfo)
+      >>> determinebranch('tag/3.4', '.', _svninfo=dummyinfo)
       'http://dev.worldcookery.com/svn/bla/tag/3.4/blergh'
 
     """
-    url = currentbranch(path, svninfo=svninfo)
+    url = currentbranch(path, _svninfo=_svninfo)
 
     chunks = url.split('/')
     chunks.reverse()
@@ -218,7 +220,7 @@ def determinebranch(branch, path='.', svninfo=svninfo):
     return '/'.join(new_chunks)
 
 
-def determinetag(tagname, path='.', svninfo=svninfo):
+def determinetag(tagname, path='.', _svninfo=None):
     """Compute the SVN URL for a different tag of a given checkout path.
 
     Let's set up a dummy 'svn info' command handler:
@@ -236,11 +238,11 @@ def determinetag(tagname, path='.', svninfo=svninfo):
     working directory path and mangles it to point to the desired
     tag.  Here's an example:
 
-      >>> determinetag('foobar', '.', svninfo=dummyinfo)
+      >>> determinetag('foobar', '.', _svninfo=dummyinfo)
       'http://dev.worldcookery.com/svn/bla/tags/foobar/blergh'
 
     """
-    url = currentbranch(path, svninfo=svninfo)
+    url = currentbranch(path, _svninfo=_svninfo)
 
     chunks = url.split('/')
     chunks.reverse()
@@ -265,7 +267,7 @@ def determinetag(tagname, path='.', svninfo=svninfo):
     return '/'.join(new_chunks)
 
 
-def listbranches(path, svninfo=svninfo, svnls=svnls):
+def listbranches(path, _svninfo=None, _svnls=None):
     r"""
     Let's set up a dummy 'svn info' command handler:
 
@@ -293,11 +295,13 @@ def listbranches(path, svninfo=svninfo, svnls=svnls):
     directory path, finds the URL of the repository, and lists all branches
     in that repository.
 
-      >>> listbranches('.', svninfo=dummyinfo, svnls=dummyls)
+      >>> listbranches('.', _svninfo=dummyinfo, _svnls=dummyls)
       ['foo', 'bar', 'baz']
 
     """
-    url = currentbranch(path, svninfo=svninfo)
+    if _svnls is None:
+        _svnls = svnls
+    url = currentbranch(path, _svninfo=_svninfo)
     chunks = url.split('/')
 
     while chunks:
@@ -310,13 +314,13 @@ def listbranches(path, svninfo=svninfo, svnls=svnls):
             break
 
     branches = []
-    for line in svnls('/'.join(chunks)).splitlines():
+    for line in _svnls('/'.join(chunks)).splitlines():
         if line.endswith('/'):
             branches.append(line[:-1])
     return branches
 
 
-def listtags(path, svninfo=svninfo, svnls=svnls):
+def listtags(path, _svninfo=None, _svnls=None):
     r"""
     Let's set up a dummy 'svn info' command handler:
 
@@ -344,11 +348,13 @@ def listtags(path, svninfo=svninfo, svnls=svnls):
     directory path, finds the URL of the repository, and lists all tags
     in that repository.
 
-      >>> listtags('.', svninfo=dummyinfo, svnls=dummyls)
+      >>> listtags('.', _svninfo=dummyinfo, _svnls=dummyls)
       ['foo', 'bar', 'baz']
 
     """
-    url = currentbranch(path, svninfo=svninfo)
+    if _svnls is None:
+        _svnls = svnls
+    url = currentbranch(path, _svninfo=_svninfo)
     chunks = url.split('/')
 
     while chunks:
@@ -361,13 +367,13 @@ def listtags(path, svninfo=svninfo, svnls=svnls):
             break
 
     branches = []
-    for line in svnls('/'.join(chunks)).splitlines():
+    for line in _svnls('/'.join(chunks)).splitlines():
         if line.endswith('/'):
             branches.append(line[:-1])
     return branches
 
 
-def branchpoints(branch, svnlog=svnlog):
+def branchpoints(branch, _svnlog=None):
     r"""
     Let's set up a dummy 'svn log' command handler:
 
@@ -398,11 +404,13 @@ def branchpoints(branch, svnlog=svnlog):
     branch point.
 
       >>> branchpoints('http://dev.worldcookery.com/svn/bla/branches/foobar',
-      ...             svnlog=dummylog)
+      ...              _svnlog=dummylog)
       (4504, 4515)
 
     """
-    xml = svnlog(branch)
+    if _svnlog is None:
+        _svnlog = svnlog
+    xml = _svnlog(branch)
     try:
         dom = minidom.parseString(xml)
     except Exception:

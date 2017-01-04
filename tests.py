@@ -106,6 +106,26 @@ def make_svninfo(url):
     return _svninfo
 
 
+def make_svnlog():
+    def _svnlog(path):
+        return textwrap.dedent('''\
+            <?xml version="1.0" encoding="utf-8"?>
+            <log>
+              <logentry revision="4515">
+                <author>mg</author>
+                <date>2007-01-11T16:30:07.775378Z</date>
+                <msg>Blah blah.</msg>
+              </logentry>
+              <logentry revision="4504">
+                <author>mg</author>
+                <date>2007-01-11T16:29:32.166370Z</date>
+                <msg>create branch</msg>
+              </logentry>
+            </log>
+        ''')
+    return _svnlog
+
+
 @pytest.mark.parametrize(['expected', 'svninfo_stdout'], [
     ('http://dev.worldcookery.com/svn/bla/trunk/blergh',
      textwrap.dedent('''\
@@ -126,7 +146,7 @@ def make_svninfo(url):
       ''')),
 ])
 def test_currentbranch(expected, svninfo_stdout):
-    url = es.currentbranch('.', svninfo=lambda path: svninfo_stdout)
+    url = es.currentbranch('.', _svninfo=lambda path: svninfo_stdout)
     assert url == expected
 
 
@@ -151,7 +171,7 @@ def test_currentbranch(expected, svninfo_stdout):
      'http://dev.worldcookery.com/svn/bla/branches/mybranch'),
 ])
 def test_determinebranch(current_url, new_branch, expected_url):
-    url = es.determinebranch(new_branch, svninfo=make_svninfo(current_url))
+    url = es.determinebranch(new_branch, _svninfo=make_svninfo(current_url))
     assert url == expected_url
 
 
@@ -167,7 +187,7 @@ def test_determinebranch(current_url, new_branch, expected_url):
      'http://dev.worldcookery.com/svn/bla/tag/foobaz/blergh'),
 ])
 def test_determinetag(current_url, new_tag, expected_url):
-    url = es.determinetag(new_tag, svninfo=make_svninfo(current_url))
+    url = es.determinetag(new_tag, _svninfo=make_svninfo(current_url))
     assert url == expected_url
 
 
@@ -188,7 +208,7 @@ def test_listbranches(current_url, expected_url):
         assert url == expected_url
         return "a/\nb/\nc\n"
     svninfo = make_svninfo(current_url)
-    branches = es.listbranches('.', svninfo=svninfo, svnls=svnls)
+    branches = es.listbranches('.', _svninfo=svninfo, _svnls=svnls)
     assert branches == ["a", "b"]
 
 
@@ -209,7 +229,7 @@ def test_listtags(current_url, expected_url):
         assert url == expected_url
         return "a/\nb/\nc\n"
     svninfo = make_svninfo(current_url)
-    branches = es.listtags('.', svninfo=svninfo, svnls=svnls)
+    branches = es.listtags('.', _svninfo=svninfo, _svnls=svnls)
     assert branches == ["a", "b"]
 
 
@@ -218,7 +238,7 @@ def test_branchpoints_error_handling():
         return 'hahaha this is not xml'
     branch_url = 'http://dev.worldcookery.com/svn/bla/branches/foo'
     with pytest.raises(SystemExit):
-        es.branchpoints(branch_url, svnlog=svnlog)
+        es.branchpoints(branch_url, _svnlog=svnlog)
 
 
 @pytest.mark.parametrize('command', [
@@ -309,6 +329,41 @@ def test_main(capsys, command, expected):
             es.main()
     out, err = capsys.readouterr()
     assert expected in out
+
+
+def test_ezmerge():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezmerge(['ezmerge', 'fix-bug-1234'])
+    assert mock_system.mock_calls == [
+        mock.call('svn log -r 4505:4515 http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234'),
+        mock.call('svn merge -r 4504:4515 http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234 .'),
+    ]
+
+
+def test_ezmerge_dry_run():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezmerge(['ezmerge', '-n', 'fix-bug-1234'])
+    assert mock_system.mock_calls == [
+        mock.call('svn log -r 4505:4515 http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234'),
+    ]
+
+
+def test_ezmerge_diff():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezmerge(['ezmerge', '-d', 'fix-bug-1234'])
+    assert mock_system.mock_calls == [
+        mock.call('svn log -r 4505:4515 http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234'),
+        mock.call('svn diff -r 4504:4515 http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234'),
+    ]
 
 
 def test_additional_tests():
