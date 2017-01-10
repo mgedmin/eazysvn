@@ -379,6 +379,42 @@ def test_ezmerge_cherry_pick_from_a_tag():
     ]
 
 
+def test_ezmerge_trunk_into_branch():
+    url = 'http://dev.worldcookery.com/svn/bla/branches/features'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezmerge(['ezmerge', 'trunk'])
+    assert mock_system.mock_calls == [
+        mock.call('svn log -r 4505:4515 http://dev.worldcookery.com/svn/bla/trunk'),
+        mock.call('svn merge -r 4504:4515 http://dev.worldcookery.com/svn/bla/trunk .'),
+    ]
+
+
+def test_ezmerge_reintegrate():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezmerge(['ezmerge', '--reintegrate', 'fix-bug-1234'])
+    assert mock_system.mock_calls == [
+        mock.call('svn log -r 4505:4515 http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234'),
+        mock.call('svn merge --reintegrate http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234 .'),
+    ]
+
+
+def test_ezmerge_accept():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezmerge(['ezmerge', '--accept=mine-full', 'fix-bug-1234'])
+    assert mock_system.mock_calls == [
+        mock.call('svn log -r 4505:4515 http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234'),
+        mock.call('svn merge -r 4504:4515 --accept mine-full http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234 .'),
+    ]
+
+
 def test_ezmerge_dry_run():
     url = 'http://dev.worldcookery.com/svn/bla/trunk'
     with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
