@@ -484,5 +484,33 @@ def test_mvbranch():
     ]
 
 
+def test_branchdiff():
+    url = 'http://dev.worldcookery.com/svn/bla/branches/fix-bug-42'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.eazysvn(['eazysvn', 'branchdiff'])
+    assert mock_system.mock_calls == [
+        mock.call(
+            "svn diff -r 4504:4515"
+            " http://dev.worldcookery.com/svn/bla/branches/fix-bug-42"
+        ),
+    ]
+
+
+def test_branchdiff_with_explicit_branch_name():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.eazysvn(['eazysvn', 'branchdiff', 'fix-bug-42'])
+    assert mock_system.mock_calls == [
+        mock.call(
+            "svn diff -r 4504:4515"
+            " http://dev.worldcookery.com/svn/bla/branches/fix-bug-42"
+        ),
+    ]
+
+
 def test_additional_tests():
     assert es.additional_tests().countTestCases() > 0
