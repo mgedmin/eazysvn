@@ -449,6 +449,15 @@ def test_ezrevert():
     ]
 
 
+def test_ezrevert_everything():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('os.system') as mock_system, \
+            pytest.raises(SystemExit):
+        es.ezrevert(['ezrevert', 'ALL'])
+    assert mock_system.mock_calls == []
+
+
 def test_ezrevert_dry_run():
     url = 'http://dev.worldcookery.com/svn/bla/trunk'
     with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
