@@ -526,6 +526,27 @@ def test_ezswitch_new_branch_with_message():
     ]
 
 
+def test_ezswitch_new_branch_cant_figure_out_structure():
+    url = 'http://dev.worldcookery.com/svn/bla'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system, \
+            pytest.raises(SystemExit):
+        es.ezswitch(['ezswitch', '-c', 'fix-bug-1234'])
+    assert mock_system.mock_calls == []
+
+
+def test_ezswitch_tag():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezswitch(['ezswitch', '-t', 'v1.0'])
+    assert mock_system.mock_calls == [
+        mock.call('svn switch http://dev.worldcookery.com/svn/bla/tags/v1.0 .'),
+    ]
+
+
 def test_eztag():
     url = 'http://dev.worldcookery.com/svn/bla/trunk'
     with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
