@@ -16,10 +16,11 @@
 
 from __future__ import print_function
 
-import os
-import sys
 import optparse
+import os
 import subprocess
+import sys
+from pipes import quote
 from xml.dom import minidom
 
 
@@ -683,8 +684,7 @@ def ezswitch(argv, progname=None):
                      % branch)
         cmd = "svn cp %s %s" % (cur_branch, branch)
         if opts.message:
-            # XXX: missing shlex.quote()
-            cmd += " -m '%s'" % opts.message
+            cmd += " -m %s" % quote(opts.message)
         print(cmd)
         if not opts.dry_run:
             sys.stdout.flush()
@@ -731,7 +731,7 @@ def eztag(argv, progname=None):
 
     cmd = "svn cp %s %s" % (path, newtag)
     if opts.message:
-        cmd += " -m '%s'" % opts.message
+        cmd += " -m %s" % quote(opts.message)
     print(cmd)
     if not opts.dry_run:
         sys.stdout.flush()
@@ -815,7 +815,7 @@ def rmbranch(argv, progname=None):
 
     cmd = "svn rm %s" % branch
     if opts.message:
-        cmd += " -m '%s'" % opts.message
+        cmd += " -m %s" % quote(opts.message)
     print(cmd)
     if not opts.dry_run:
         sys.stdout.flush()
@@ -857,7 +857,7 @@ def mvbranch(argv, progname=None):
 
     cmd = "svn mv %s %s" % (oldbranch, newbranch)
     if opts.message:
-        cmd += " -m '%s'" % opts.message
+        cmd += " -m %s" % quote(opts.message)
     print(cmd)
     if not opts.dry_run:
         sys.stdout.flush()

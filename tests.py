@@ -425,8 +425,62 @@ def test_ezswitch_new_branch():
             mock.patch('os.system') as mock_system:
         es.ezswitch(['ezswitch', '-c', 'fix-bug-1234'])
     assert mock_system.mock_calls == [
-        mock.call('svn cp http://dev.worldcookery.com/svn/bla/trunk http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234'),
+        mock.call('svn cp http://dev.worldcookery.com/svn/bla/trunk'
+                        ' http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234'),
         mock.call('svn switch http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234 .'),
+    ]
+
+
+def test_ezswitch_new_branch_with_message():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezswitch(['ezswitch', '-c', 'fix-bug-1234', '-m', "It's a branch to fix bug"])
+    assert mock_system.mock_calls == [
+        mock.call("svn cp http://dev.worldcookery.com/svn/bla/trunk"
+                        " http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234"
+                        " -m 'It'\"'\"'s a branch to fix bug'"),
+        mock.call('svn switch http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234 .'),
+    ]
+
+
+def test_eztag():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.eztag(['eztag', 'v1.2.3', '-m', "It's version 1.2.3!"])
+    assert mock_system.mock_calls == [
+        mock.call("svn cp ."
+                        " http://dev.worldcookery.com/svn/bla/tags/v1.2.3"
+                        " -m 'It'\"'\"'s version 1.2.3!'"),
+    ]
+
+
+def test_rmbranch():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.eazysvn(['eazysvn', 'rmbranch', 'fix-bug-1234', '-m', "It's merged!"])
+    assert mock_system.mock_calls == [
+        mock.call("svn rm http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234"
+                        " -m 'It'\"'\"'s merged!'"),
+    ]
+
+
+def test_mvbranch():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.eazysvn(['eazysvn', 'mvbranch', 'fix-bgu-1234', 'fix-bug-1234',
+                    '-m', "I can't spell!"])
+    assert mock_system.mock_calls == [
+        mock.call("svn mv http://dev.worldcookery.com/svn/bla/branches/fix-bgu-1234"
+                        " http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234"
+                        " -m 'I can'\"'\"'t spell!'"),
     ]
 
 
