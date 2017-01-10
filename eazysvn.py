@@ -683,6 +683,7 @@ def ezswitch(argv, progname=None):
                      % branch)
         cmd = "svn cp %s %s" % (cur_branch, branch)
         if opts.message:
+            # XXX: missing shlex.quote()
             cmd += " -m '%s'" % opts.message
         print(cmd)
         if not opts.dry_run:

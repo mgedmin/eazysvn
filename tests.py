@@ -398,5 +398,37 @@ def test_ezrevert_range():
     ]
 
 
+def test_ezswitch():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezswitch(['ezswitch', 'fix-bug-1234'])
+    assert mock_system.mock_calls == [
+        mock.call('svn switch http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234 .'),
+    ]
+
+
+def test_ezswitch_dry_run():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezswitch(['ezswitch', '-n', 'fix-bug-1234'])
+    assert mock_system.mock_calls == []
+
+
+def test_ezswitch_new_branch():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezswitch(['ezswitch', '-c', 'fix-bug-1234'])
+    assert mock_system.mock_calls == [
+        mock.call('svn cp http://dev.worldcookery.com/svn/bla/trunk http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234'),
+        mock.call('svn switch http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234 .'),
+    ]
+
+
 def test_additional_tests():
     assert es.additional_tests().countTestCases() > 0
