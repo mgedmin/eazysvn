@@ -458,6 +458,39 @@ def test_eztag():
     ]
 
 
+def test_ezbranch(capsys):
+    url = 'http://dev.worldcookery.com/svn/bla/branches/froggy'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezbranch(['ezbranch'])
+    assert mock_system.mock_calls == []
+    out, err = capsys.readouterr()
+    assert out == "%s\n" % url
+
+
+def test_ezbranch_with_explicit_name(capsys):
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezbranch(['ezbranch', 'froggy'])
+    assert mock_system.mock_calls == []
+    out, err = capsys.readouterr()
+    assert out == "http://dev.worldcookery.com/svn/bla/branches/froggy\n"
+
+
+def test_ezbranch_with_tag_name(capsys):
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezbranch(['ezbranch', '-t', 'v1.0'])
+    assert mock_system.mock_calls == []
+    out, err = capsys.readouterr()
+    assert out == "http://dev.worldcookery.com/svn/bla/tags/v1.0\n"
+
+
 def test_rmbranch():
     url = 'http://dev.worldcookery.com/svn/bla/trunk'
     with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
