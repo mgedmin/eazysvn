@@ -512,5 +512,25 @@ def test_branchdiff_with_explicit_branch_name():
     ]
 
 
+def test_branchpoint(capsys):
+    url = 'http://dev.worldcookery.com/svn/bla/branches/fix-bug-42'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system'):
+        es.eazysvn(['eazysvn', 'branchpoint'])
+    out, err = capsys.readouterr()
+    assert out == "4504\n"
+
+
+def test_branchpoint_with_explicit_branch_name(capsys):
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system'):
+        es.eazysvn(['eazysvn', 'branchpoint', 'fix-bug-42'])
+    out, err = capsys.readouterr()
+    assert out == "4504\n"
+
+
 def test_additional_tests():
     assert es.additional_tests().countTestCases() > 0
