@@ -343,6 +343,42 @@ def test_ezmerge():
     ]
 
 
+def test_ezmerge_cherry_pick():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezmerge(['ezmerge', '4507', 'feature-creep'])
+    assert mock_system.mock_calls == [
+        mock.call('svn log -r 4507:4507 http://dev.worldcookery.com/svn/bla/branches/feature-creep'),
+        mock.call('svn merge -r 4506:4507 http://dev.worldcookery.com/svn/bla/branches/feature-creep .'),
+    ]
+
+
+def test_ezmerge_cherry_pick_range():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezmerge(['ezmerge', '4507-4508', 'feature-creep'])
+    assert mock_system.mock_calls == [
+        mock.call('svn log -r 4507:4508 http://dev.worldcookery.com/svn/bla/branches/feature-creep'),
+        mock.call('svn merge -r 4506:4508 http://dev.worldcookery.com/svn/bla/branches/feature-creep .'),
+    ]
+
+
+def test_ezmerge_cherry_pick_from_a_tag():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezmerge(['ezmerge', '4507', '-t', 'v1.0.1'])
+    assert mock_system.mock_calls == [
+        mock.call('svn log -r 4507:4507 http://dev.worldcookery.com/svn/bla/tags/v1.0.1'),
+        mock.call('svn merge -r 4506:4507 http://dev.worldcookery.com/svn/bla/tags/v1.0.1 .'),
+    ]
+
+
 def test_ezmerge_dry_run():
     url = 'http://dev.worldcookery.com/svn/bla/trunk'
     with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
