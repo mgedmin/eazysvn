@@ -94,15 +94,16 @@ def test_svnlog(svncheckout):
     assert stdout.startswith('<?xml')
 
 
-def make_svninfo(url):
+def make_svninfo(url, expected_path='.'):
     def _svninfo(path):
+        assert path == expected_path
         return textwrap.dedent('''\
-            Path: .
+            Path: %s
             URL: %s
             Repository UUID: ab69c8a2-bfcb-0310-9bff-acb20127a769
             Revision: 1654
             Node Kind: directory
-        ''') % url
+        ''') % (path, url)
     return _svninfo
 
 
@@ -438,6 +439,19 @@ def test_ezmerge_diff():
     ]
 
 
+def test_ezmerge_with_wc_path():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url, '~/src/cookery')), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezmerge(['ezmerge', 'ALL', 'fix-bug-1234', '~/src/cookery'])
+    assert mock_system.mock_calls == [
+        mock.call('svn log -r 4505:4515 http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234'),
+        mock.call('svn merge -r 4504:4515 http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234 ~/src/cookery'),
+    ]
+
+
+
 def test_ezrevert():
     url = 'http://dev.worldcookery.com/svn/bla/trunk'
     with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
@@ -476,6 +490,17 @@ def test_ezrevert_range():
     assert mock_system.mock_calls == [
         mock.call('svn log -r 5512:5534 .'),
         mock.call('svn merge -r 5534:5511 .'),
+    ]
+
+
+def test_ezrevert_with_wc_path():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
+            mock.patch('os.system') as mock_system:
+        es.ezrevert(['ezrevert', '5543', '~/src/cookery'])
+    assert mock_system.mock_calls == [
+        mock.call('svn log -r 5543:5543 ~/src/cookery'),
+        mock.call('svn merge -r 5543:5542 ~/src/cookery'),
     ]
 
 
@@ -547,6 +572,18 @@ def test_ezswitch_tag():
     ]
 
 
+def test_ezswitch_with_wc_path():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url, '~/src/cookery')), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezswitch(['ezswitch', 'fix-bug-1234', '~/src/cookery'])
+    assert mock_system.mock_calls == [
+        mock.call('svn switch http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234 ~/src/cookery'),
+    ]
+
+
+
 def test_eztag():
     url = 'http://dev.worldcookery.com/svn/bla/trunk'
     with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
@@ -591,6 +628,17 @@ def test_ezbranch_with_tag_name(capsys):
     assert mock_system.mock_calls == []
     out, err = capsys.readouterr()
     assert out == "http://dev.worldcookery.com/svn/bla/tags/v1.0\n"
+
+
+def test_ezbranch_with_wc_path(capsys):
+    url = 'http://dev.worldcookery.com/svn/bla/branches/froggy'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url, '~/src/cookery')), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.ezbranch(['ezbranch', 'trunk', '~/src/cookery'])
+    assert mock_system.mock_calls == []
+    out, err = capsys.readouterr()
+    assert out == "http://dev.worldcookery.com/svn/bla/trunk\n"
 
 
 def test_rmbranch():
@@ -647,6 +695,20 @@ def test_branchdiff_with_explicit_branch_name():
     ]
 
 
+def test_branchdiff_with_wc_path():
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url, '~/src/cookery')), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system') as mock_system:
+        es.eazysvn(['eazysvn', 'branchdiff', 'fix-bug-42', '~/src/cookery'])
+    assert mock_system.mock_calls == [
+        mock.call(
+            "svn diff -r 4504:4515"
+            " http://dev.worldcookery.com/svn/bla/branches/fix-bug-42"
+        ),
+    ]
+
+
 def test_branchpoint(capsys):
     url = 'http://dev.worldcookery.com/svn/bla/branches/fix-bug-42'
     with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
@@ -663,6 +725,16 @@ def test_branchpoint_with_explicit_branch_name(capsys):
             mock.patch('eazysvn.svnlog', make_svnlog()), \
             mock.patch('os.system'):
         es.eazysvn(['eazysvn', 'branchpoint', 'fix-bug-42'])
+    out, err = capsys.readouterr()
+    assert out == "4504\n"
+
+
+def test_branchpoint_with_wc_path(capsys):
+    url = 'http://dev.worldcookery.com/svn/bla/trunk'
+    with mock.patch('eazysvn.svninfo', make_svninfo(url, '~/src/cookery')), \
+            mock.patch('eazysvn.svnlog', make_svnlog()), \
+            mock.patch('os.system'):
+        es.eazysvn(['eazysvn', 'branchpoint', 'fix-bug-42', '~/src/cookery'])
     out, err = capsys.readouterr()
     assert out == "4504\n"
 
