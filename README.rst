@@ -11,11 +11,11 @@ Subversion branches.
 Installation
 ============
 
-Get it from the `Python Package Index <http://pypi.python.org/pypi/eazysvn>`_::
+Get it from the `Python Package Index <https://pypi.python.org/pypi/eazysvn>`_::
 
   pip install eazysvn
 
-You'll need Python 2.6 or later, as well as the Subversion command-line client.
+You'll need Python 2.7 or later, as well as the Subversion command-line client.
 
 
 Usage
@@ -88,7 +88,7 @@ created, say, to review it before attempting a merge.
   eazysvn branchdiff *branchname*
 
 does exactly that.  For extra readability, install `colordiff
-<http://colordiff.sourceforge.net/>`_ and use
+<https://www.colordiff.org/>`_ and use
 
 .. parsed-literal::
 
@@ -358,7 +358,7 @@ You can get the latest source code with
 
 Eazysvn began life as Philipp von Weitershausen's `ezmerge.py
 <http://codespeak.net/svn/user/philikon/ezmerge.py>`_.  Then Marius Gedminas
-took over, created a `home page <http://mg.pov.lt/eazysvn>`_, and started
+took over, created a `home page <https://mg.pov.lt/eazysvn>`_, and started
 adding random features.
 
 

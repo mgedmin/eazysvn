@@ -12,7 +12,8 @@ with open(changelog) as f:
     changes_in_all_versions = f.read().split('\n\n\n', 1)[1]
 
 with open(readme) as f:
-    long_description = f.read().replace('See CHANGES.rst', changes_in_all_versions)
+    long_description = f.read().replace('See CHANGES.rst',
+                                        changes_in_all_versions)
 
 first_changelog_line = changes_in_all_versions.lstrip().split('\n', 1)[0]
 
@@ -33,7 +34,7 @@ setup(
     author_email='philipp@weitershausen.de',
     maintainer='Marius Gedminas',
     maintainer_email='marius@gedmin.as',
-    url='http://mg.pov.lt/eazysvn/',
+    url='https://mg.pov.lt/eazysvn/',
     download_url='https://pypi.python.org/pypi/eazysvn',
     description='Make simple revision merges and branch switching much easier',
     long_description=long_description,
