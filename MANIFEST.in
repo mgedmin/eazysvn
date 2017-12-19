@@ -11,3 +11,6 @@ include *.yml
 
 # added by check_manifest.py
 include *.py
+
+# added by check_manifest.py
+include *.mk
