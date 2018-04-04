@@ -6,3 +6,4 @@ eazysvn.egg-info/
 .coverage
 .cache/
 build/
+.pytest_cache/
