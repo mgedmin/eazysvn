@@ -35,7 +35,9 @@ setup(
     maintainer='Marius Gedminas',
     maintainer_email='marius@gedmin.as',
     url='https://mg.pov.lt/eazysvn/',
-    download_url='https://pypi.python.org/pypi/eazysvn',
+    project_urls={
+        'Source': 'https://github.com/mgedmin/eazysvn',
+    },
     description='Make simple revision merges and branch switching much easier',
     long_description=long_description,
     license='GPL',
@@ -56,9 +58,11 @@ setup(
 
     py_modules=['eazysvn'],
     zip_safe=False,
-    entry_points="""
-    [console_scripts]
-    eazysvn = eazysvn:main
-    """ + '\n'.join('%s = eazysvn:main' % alias for alias in ALIASES),
+    entry_points=dict(
+        console_scripts=[
+            '%s = eazysvn:main' % alias
+            for alias in ['eazysvn'] + list(ALIASES)
+        ],
+    ),
     test_suite='eazysvn',
 )
