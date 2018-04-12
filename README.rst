@@ -11,7 +11,7 @@ Subversion branches.
 Installation
 ============
 
-Get it from the `Python Package Index <https://pypi.python.org/pypi/eazysvn>`_::
+Get it from the `Python Package Index <https://pypi.org/project/eazysvn>`_::
 
   pip install eazysvn
 
@@ -125,7 +125,7 @@ Cherrypicking
 -------------
 
 If you want to merge only some of the changes made in a branch, you can pass the
-revision number (or a range) to ezmerge.  For example, to backport a bugfix
+revision number (or a range) to ezmerge.  For example, to backport a bug fix
 implemented in revision 1234 of trunk to a release branch,
 
 .. parsed-literal::
@@ -149,10 +149,10 @@ The --diff option works here too.
   ezmerge -d 1234-1236 trunk
 
 
-Reverting comitted changes
---------------------------
+Reverting committed changes
+---------------------------
 
-It's like cherrypicking, but in reverse: you want to unapply changes already
+It's like cherry-picking, but in reverse: you want to unapply changes already
 committed to this branch. ::
 
   ezrevert 1234
@@ -317,7 +317,7 @@ Branch merge logic
 
 When you merge a branch (to trunk or to another branch), eazysvn uses ``svn
 log`` to find the revision number when the branch was created.  Then it merges
-all the changes ever comitted on that branch.
+all the changes ever committed on that branch.
 
 This means you usually can't merge from the same branch more than once.  It's
 a consequence of Subversion's lack of merge tracking.
@@ -345,16 +345,16 @@ Changelog
 See CHANGES.rst
 
 
-Licencing and source code
+Licensing and source code
 =========================
 
-Eazysvn is licenced under the GNU General Public Licence version 2 or later.
+Eazysvn is licensed under the GNU General Public Licence version 2 or later.
 
 You can get the latest source code with
 
 .. parsed-literal::
 
-  git clone git://github.com/mgedmin/eazysvn.git
+  git clone https://github.com/mgedmin/eazysvn
 
 Eazysvn began life as Philipp von Weitershausen's `ezmerge.py
 <http://codespeak.net/svn/user/philikon/ezmerge.py>`_.  Then Marius Gedminas
@@ -368,8 +368,8 @@ Bugs
 Report bugs at https://github.com/mgedmin/eazysvn/issues
 
 
-Wishlist/Todo
-=============
+Wishlist/To do
+==============
 
 ``ezmerge`` should accept a comma-separated list of revisions (1,2,4-6,9).
 
