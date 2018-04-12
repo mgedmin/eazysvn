@@ -2,12 +2,14 @@ Changelog
 =========
 
 
-1.14.1 (unreleased)
+1.15.0 (2018-04-13)
 -------------------
 
 * Add support for Python 3.6.
 
 * Drop support for Python 3.3.
+
+* 100% test coverage.
 
 
 1.14.0 (2016-09-17)

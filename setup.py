@@ -3,7 +3,7 @@ import os
 import sys
 from setuptools import setup
 
-from eazysvn import ALIASES, VERSION
+from eazysvn import ALIASES, __version__
 
 readme = os.path.join(os.path.dirname(__file__), 'README.rst')
 changelog = os.path.join(os.path.dirname(__file__), 'CHANGES.rst')
@@ -17,19 +17,19 @@ with open(readme) as f:
 
 first_changelog_line = changes_in_all_versions.lstrip().split('\n', 1)[0]
 
-version_indicates_unreleased = 'dev' in VERSION
+version_indicates_unreleased = 'dev' in __version__
 changelog_indicates_unreleased = first_changelog_line.endswith('(unreleased)')
-version_in_version = VERSION.split('dev')[0].rstrip('.')
+version_in_version = __version__.split('dev')[0].rstrip('.')
 version_in_changelog = first_changelog_line.split()[0]
 
 if (version_in_version != version_in_changelog or
         version_indicates_unreleased != changelog_indicates_unreleased):
-    sys.exit("VERSION is %s, but last changelog entry is for %s"
-             % (VERSION, first_changelog_line))
+    sys.exit("__version__ is %s, but last changelog entry is for %s"
+             % (__version__, first_changelog_line))
 
 setup(
     name='eazysvn',
-    version=VERSION,
+    version=__version__,
     author='Philipp von Weitershausen',
     author_email='philipp@weitershausen.de',
     maintainer='Marius Gedminas',
@@ -41,6 +41,7 @@ setup(
     description='Make simple revision merges and branch switching much easier',
     long_description=long_description,
     license='GPL',
+    keywords='svn subversion wrapper',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',

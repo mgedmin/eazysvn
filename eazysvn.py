@@ -24,7 +24,7 @@ from pipes import quote
 from xml.dom import minidom
 
 
-VERSION = '1.14.1.dev0'
+__version__ = '1.15.0'
 
 
 #
@@ -963,7 +963,7 @@ def eazysvn(argv):
 
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == '--version':
-        print("eazysvn version %s" % VERSION)
+        print("eazysvn version %s" % __version__)
         sys.exit(0)
     cmd = clean_progname(sys.argv[0])
     func = ALIASES.get(cmd, eazysvn)
