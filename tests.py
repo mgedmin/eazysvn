@@ -312,7 +312,7 @@ def test_eazysvn_help(capsys):
 
 
 def test_eazysvn_unknown_command():
-    with pytest.raises(SystemExit, message="Unknown command: blargh."):
+    with pytest.raises(SystemExit, match="Unknown command: blargh."):
         es.eazysvn(['eazysvn', 'blargh'])
 
 
