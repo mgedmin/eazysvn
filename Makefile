@@ -8,7 +8,7 @@ default:
 
 .PHONY: check test
 check test:
-	py.test eazysvn.py tests.py
+	tox
 
 .PHONY: coverage
 coverage:
