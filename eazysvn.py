@@ -24,7 +24,7 @@ from pipes import quote
 from xml.dom import minidom
 
 
-__version__ = '1.15.1'
+__version__ = '1.15.2.dev0'
 
 
 #
