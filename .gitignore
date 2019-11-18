@@ -4,6 +4,7 @@ eazysvn.egg-info/
 *.pyc
 .tox/
 .coverage
+.coverage.*
 .cache/
 build/
 .pytest_cache/
