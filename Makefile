@@ -8,7 +8,7 @@ default:
 
 .PHONY: check test
 check test:
-	tox
+	tox -p auto
 
 .PHONY: coverage
 coverage:
