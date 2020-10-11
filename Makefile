@@ -1,19 +1,17 @@
-PYTHON = python
-FILE_WITH_VERSION = eazysvn.py
-FILE_WITH_CHANGELOG = CHANGES.rst
-
-.PHONY: default
-default:
+.PHONY: all
+all:
 	@echo "Nothing to build here"
 
-.PHONY: check test
-check test:
+.PHONY: test
+test:                           ##: run tests
 	tox -p auto
 
 .PHONY: coverage
-coverage:
+coverage:                       ##: measure test coverage
 	tox -e coverage,coverage3 -- -p
 	coverage combine
 	coverage report -m --fail-under=100
 
+
+FILE_WITH_VERSION = eazysvn.py
 include release.mk
