@@ -1,18 +1,26 @@
 language: python
-dist: xenial
+cache: pip
 python:
-    - 2.7
-    - 3.6
-    - 3.7
-    - 3.8
-    - 3.9
-    - pypy
-    - pypy3
+  - 2.7
+  - 3.6
+  - 3.7
+  - 3.8
+  - 3.9
+  - pypy
+  - pypy3
 install:
-    - pip install coverage coveralls pytest mock
+  - pip install coverage coveralls pytest mock
 script:
-    - coverage run -m pytest eazysvn.py tests.py
+  - coverage run -m pytest eazysvn.py tests.py
 after_success:
-    - coveralls
+  - coveralls
+
 notifications:
-    email: false
+  irc:
+    channels:
+      - "chat.freenode.net##mgedmin"
+    on_success: change
+    on_failure: always
+    template:
+      # ping my nick so I get a pushbullet notification on my phone
+      - "mgedmin: %{repository_name} (%{branch}) build %{result}: %{build_url}"
