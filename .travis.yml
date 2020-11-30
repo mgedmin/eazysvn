@@ -9,7 +9,7 @@ python:
     - pypy
     - pypy3
 install:
-    - pip install coverage coveralls pytest mock
+    - pip install coverage coverage-python-version coveralls pytest mock
 script:
     - coverage run -m pytest eazysvn.py tests.py
 after_success:

@@ -50,7 +50,7 @@ jobs:
         run: |
           python -m pip install -U pip
           python -m pip install -U setuptools wheel
-          python -m pip install -U coverage coveralls pytest mock
+          python -m pip install -U coverage coverage-python-version coveralls pytest mock
 
       - name: Run tests
         run: coverage run -m pytest eazysvn.py tests.py

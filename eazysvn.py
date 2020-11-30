@@ -100,7 +100,7 @@ def pipe(*command, **kwargs):
     p = subprocess.Popen(command, stdout=subprocess.PIPE, **kwargs)
     stdout = p.communicate()[0]
     if not isinstance(stdout, str):
-        stdout = stdout.decode('UTF-8', 'replace')
+        stdout = stdout.decode('UTF-8', 'replace')  # pragma: PY3
     return stdout
 
 
