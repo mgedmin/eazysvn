@@ -2,6 +2,9 @@
 eazysvn
 =======
 
+.. image:: https://github.com/mgedmin/eazysvn/workflows/build/badge.svg?branch=master
+    :target: https://github.com/mgedmin/eazysvn/actions
+
 Eazysvn is a Python script that simplifies some common operations with
 Subversion branches.
 
