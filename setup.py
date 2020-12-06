@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 import os
 import sys
+
 from setuptools import setup
 
 from eazysvn import ALIASES, __version__
+
 
 readme = os.path.join(os.path.dirname(__file__), 'README.rst')
 changelog = os.path.join(os.path.dirname(__file__), 'CHANGES.rst')

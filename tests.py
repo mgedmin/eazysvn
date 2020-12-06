@@ -6,15 +6,18 @@ import textwrap
 from collections import namedtuple
 from contextlib import contextmanager
 
-try:
-    from urllib.request import pathname2url     # Python 3
-except ImportError:
-    from urllib import pathname2url             # Python 2
-
 import mock
 import pytest
 
 import eazysvn as es
+
+
+try:
+    # Python 3
+    from urllib.request import pathname2url
+except ImportError:
+    # Python 2
+    from urllib import pathname2url
 
 
 @contextmanager
