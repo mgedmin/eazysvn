@@ -8,7 +8,7 @@ from contextlib import contextmanager
 
 try:
     from urllib.request import pathname2url     # Python 3
-except:
+except ImportError:
     from urllib import pathname2url             # Python 2
 
 import mock
@@ -451,7 +451,6 @@ def test_ezmerge_with_wc_path():
     ]
 
 
-
 def test_ezrevert():
     url = 'http://dev.worldcookery.com/svn/bla/trunk'
     with mock.patch('eazysvn.svninfo', make_svninfo(url)), \
@@ -581,7 +580,6 @@ def test_ezswitch_with_wc_path():
     assert mock_system.mock_calls == [
         mock.call('svn switch http://dev.worldcookery.com/svn/bla/branches/fix-bug-1234 ~/src/cookery'),
     ]
-
 
 
 def test_eztag():
