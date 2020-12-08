@@ -73,6 +73,8 @@ jobs:
         toxenv:
           - flake8
           - isort
+          - check-manifest
+          - check-python-versions
 
     steps:
       - name: Git clone
