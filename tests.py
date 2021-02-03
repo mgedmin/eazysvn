@@ -59,7 +59,7 @@ def chdir(dirname):
 SVNRepo = namedtuple('SVNRepo', 'url, path')
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def svnrepo(name='repo'):
     with tempdir() as dirname:
         path = os.path.join(dirname, name)
@@ -74,7 +74,7 @@ def svnrepo(name='repo'):
 SVNCheckout = namedtuple('SVNCheckout', 'path, repo')
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def svncheckout(svnrepo):
     with tempdir() as dirname:
         subprocess.call(['svn', 'co', svnrepo.url, dirname])
