@@ -351,7 +351,7 @@ See CHANGES.rst
 Licensing and source code
 =========================
 
-Eazysvn is licensed under the GNU General Public Licence version 2 or later.
+Eazysvn is licensed under the GNU General Public Licence version 2 or 3.
 
 You can get the latest source code with
 
