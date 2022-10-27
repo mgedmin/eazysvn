@@ -5,7 +5,7 @@ Changelog
 1.15.2 (unreleased)
 -------------------
 
-- Add support for Python 3.8, 3.9, and 3.10.
+- Add support for Python 3.8, 3.9, 3.10, and 3.11.
 
 - Drop support for Python 3.5 and 3.6.
 
