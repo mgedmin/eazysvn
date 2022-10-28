@@ -42,6 +42,7 @@ setup(
     },
     description='Make simple revision merges and branch switching much easier',
     long_description=long_description,
+    long_description_content_type='text/x-rst',
     license='GPL v2 or v3',
     keywords='svn subversion wrapper',
     classifiers=[
