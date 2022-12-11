@@ -61,7 +61,7 @@ jobs:
 
       - name: Report to coveralls
         run: coveralls
-        if: "matrix.python-version != '2.7' && matrix.python-version != 'pypy-2.7'"
+        if: "matrix.python-version != '2.7' && matrix.python-version != 'pypy2.7'"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_SERVICE_NAME: github
