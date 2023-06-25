@@ -14,8 +14,6 @@
 # or ezmerge as a shortcut for eazysvn switch/merge.
 #
 
-from __future__ import print_function
-
 import optparse
 import os
 import subprocess
@@ -24,7 +22,7 @@ from pipes import quote
 from xml.dom import minidom
 
 
-__version__ = '1.15.2.dev0'
+__version__ = '1.16.0.dev0'
 
 
 #
