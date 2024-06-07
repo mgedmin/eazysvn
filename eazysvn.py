@@ -18,7 +18,7 @@ import optparse
 import os
 import subprocess
 import sys
-from pipes import quote
+from shlex import quote
 from xml.dom import minidom
 
 
