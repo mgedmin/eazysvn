@@ -73,5 +73,4 @@ setup(
             for alias in ['eazysvn'] + list(ALIASES)
         ],
     ),
-    test_suite='eazysvn',
 )
