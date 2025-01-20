@@ -2,10 +2,10 @@ Changelog
 =========
 
 
-1.16.1 (unreleased)
+1.17.0 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Drop support for Python 3.7.
 
 
 1.16.0 (2024-10-09)
