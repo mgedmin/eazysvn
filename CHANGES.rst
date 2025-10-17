@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.17.0 (unreleased)
+1.17.0 (2025-10-17)
 -------------------
 
 - Add support for Python 3.14.

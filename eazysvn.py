@@ -22,7 +22,7 @@ from shlex import quote
 from xml.dom import minidom
 
 
-__version__ = '1.17.0.dev0'
+__version__ = '1.17.0'
 
 
 #
