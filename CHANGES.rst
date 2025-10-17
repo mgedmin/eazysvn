@@ -5,6 +5,8 @@ Changelog
 1.17.0 (unreleased)
 -------------------
 
+- Add support for Python 3.14.
+
 - Drop support for Python 3.7.
 
 

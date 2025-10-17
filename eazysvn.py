@@ -96,9 +96,7 @@ def revs(rev):
 
 def pipe(*command, **kwargs):
     p = subprocess.Popen(command, stdout=subprocess.PIPE, **kwargs)
-    stdout = p.communicate()[0]
-    if not isinstance(stdout, str):
-        stdout = stdout.decode('UTF-8', 'replace')  # pragma: PY3
+    stdout = p.communicate()[0].decode('UTF-8', 'replace')
     return stdout
 
 
@@ -966,11 +964,6 @@ def main():
     cmd = clean_progname(sys.argv[0])
     func = ALIASES.get(cmd, eazysvn)
     sys.exit(func(sys.argv))
-
-
-def additional_tests():  # for setup.py test
-    import doctest
-    return doctest.DocTestSuite()
 
 
 if __name__ == '__main__':

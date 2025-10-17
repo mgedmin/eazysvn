@@ -16,9 +16,9 @@ Installation
 
 Get it from the `Python Package Index <https://pypi.org/project/eazysvn>`_::
 
-  pip install eazysvn
+  uv tool install eazysvn
 
-You'll need Python 2.7 or later, as well as the Subversion command-line client.
+You'll need Python 3.8 or later, as well as the Subversion command-line client.
 
 
 Usage
@@ -385,4 +385,3 @@ error.
 
 ``eazysvn`` should do an ``svn ls`` to discover the branching scheme in use
 ('branch' or the more traditional 'branches').
-
