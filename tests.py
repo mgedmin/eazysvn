@@ -5,19 +5,12 @@ import tempfile
 import textwrap
 from collections import namedtuple
 from contextlib import contextmanager
+from urllib.request import pathname2url
 
 import mock
 import pytest
 
 import eazysvn as es
-
-
-try:
-    # Python 3
-    from urllib.request import pathname2url
-except ImportError:
-    # Python 2
-    from urllib import pathname2url
 
 
 @contextmanager
@@ -48,6 +41,8 @@ def rmtree(path):
 
 @contextmanager
 def chdir(dirname):
+    # NB: contextlib.chdir() was added in Python 3.11, we can get rid of this
+    # once we drop Python 3.10 compatibility
     olddirname = os.getcwd()
     try:
         os.chdir(dirname)
@@ -738,7 +733,3 @@ def test_branchpoint_with_wc_path(capsys):
         es.eazysvn(['eazysvn', 'branchpoint', 'fix-bug-42', '~/src/cookery'])
     out, err = capsys.readouterr()
     assert out == "4504\n"
-
-
-def test_additional_tests():
-    assert es.additional_tests().countTestCases() > 0
