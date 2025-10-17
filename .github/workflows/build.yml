@@ -59,7 +59,16 @@ jobs:
           python -m pip install -U coverage coveralls pytest mock
 
       - name: Run tests
-        run: coverage run -m pytest eazysvn.py tests.py
+        shell: bash
+        run: |
+          # It is utter nonsense that I have to do this
+          case "$RUNNER_OS" in
+            Windows)
+              PATH=$PATH:"/c/Program Files (x86)/Subversion/bin"
+              ;;
+          esac
+
+          coverage run -m pytest eazysvn.py tests.py
 
       - name: Check test coverage
         run: |
