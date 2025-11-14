@@ -1,7 +1,6 @@
 include *.rst
 include .coveragerc
 include .gitignore
-include .travis.yml
 include COPYING
 include Makefile
 include tox.ini
