@@ -5,6 +5,8 @@ Changelog
 1.17.1 (unreleased)
 -------------------
 
+- Add support for Python 3.15.
+
 - Drop support for Python 3.8 and 3.9.
 
 
